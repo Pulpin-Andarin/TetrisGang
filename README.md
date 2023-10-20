@@ -1,2 +1,0 @@
-# TetrisGang
-TetrisGang Game
