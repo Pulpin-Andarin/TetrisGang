@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Constantes.h"
 #include "TetrisGangProjectile.generated.h"
 
 class USphereComponent;
@@ -33,5 +34,13 @@ public:
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Rotation)
+	Rotations rotation;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Type)
+	Pieces piece;
+
+	
 };
 

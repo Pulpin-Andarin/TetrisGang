@@ -6,23 +6,23 @@
 
 
 
-UENUM()
-enum Rotations{
-	Up,
-	Down,
-	Left,
-	Right
+UENUM(BlueprintType)
+enum class Rotations : uint8{
+	Up UMETA(DisplayName="Up"),
+	Down UMETA(DisplayName="Down"),
+	Left UMETA(DisplayName="Left"),
+	Right UMETA(DisplayName="Right")
 };
 
-UENUM()
-enum Pieces{
-	Yelow,
-	Cyan,
-	Green,
-	Red,
-	Orange,
-	Blue,
-	Purple
+UENUM(BlueprintType)
+enum class Pieces : uint8 {
+	Yelow UMETA(DisplayName="Yelow"),
+	Cyan UMETA(DisplayName="Cyan"),
+	Green UMETA(DisplayName="Green"),
+	Red UMETA(DisplayName="Red"),
+	Orange UMETA(DisplayName="Orange"),
+	Blue UMETA(DisplayName="Blue"),
+	Purple UMETA(DisplayName="Purple")
 };
 
 /**
