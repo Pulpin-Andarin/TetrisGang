@@ -1,0 +1,52 @@
+# Ignore project files in the root
+*.sln
+!*/*.sln
+.vs
+*.suo
+*.opensdf
+*.sdf
+*.pdb
+*.obj
+*-Debug.dll
+*.xcodeproj
+./Makefile
+./CMakeLists.txt
+./.ue4dependencies
+
+
+ipch/*
+
+
+
+# Ignore Unix backup files
+*~
+
+# Ignore Mac desktop services store files 
+.DS_Store
+
+# Ignore crash reports
+crashinfo--*
+
+# Ignore linux project files
+*.user
+*.pro
+*.pri
+*.kdev4
+
+# Ignore project-specific files
+#Binaries/*.pdb
+#Binaries/-Shipping.
+Binaries/*
+Build/Receipts/*
+DerivedDataCache/*
+Intermediate/*
+Saved/*
+*.sln
+Plugins/*/Intermediate/*
+.vs/*
+Content/FMOD/**/.cache/*
+Content/FMOD/**/.unsaved/*
+Content/FMOD/**/.user/*
+Content/FMOD/PrivateIntegrationData/*
+
+Intermediate/
