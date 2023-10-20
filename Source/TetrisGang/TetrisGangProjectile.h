@@ -9,6 +9,7 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class UStaticMeshComponent;
 
 UCLASS(config=Game)
 class ATetrisGangProjectile : public AActor
@@ -23,6 +24,8 @@ class ATetrisGangProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY()
+	UStaticMeshComponent* PieceMesh;
 public:
 	ATetrisGangProjectile();
 
@@ -41,6 +44,11 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Type)
 	Pieces piece;
 
+	UFUNCTION(BlueprintCallable)
+	void Rotate(Rotations newRotation);
+
+	UFUNCTION()
+	void UpdateMesh(UStaticMesh *NewMesh);
 	
 };
 

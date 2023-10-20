@@ -2,7 +2,9 @@
 
 #include "TetrisGangProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "Constantes.h"
 
 ATetrisGangProjectile::ATetrisGangProjectile() 
 {
@@ -12,6 +14,8 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionComp->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
 
+	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PieceMesh"));
+	
 	// Players can't walk on it
 	CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 	CollisionComp->CanCharacterStepUpOn = ECB_No;
@@ -40,4 +44,14 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 
 		Destroy();
 	}
+}
+
+void ATetrisGangProjectile::UpdateMesh(UStaticMesh *NewMesh)
+{
+	PieceMesh->SetStaticMesh(NewMesh);
+}
+
+void ATetrisGangProjectile::Rotate(Rotations newRotation)
+{
+
 }
