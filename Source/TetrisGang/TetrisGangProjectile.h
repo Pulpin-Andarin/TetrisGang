@@ -10,6 +10,7 @@
 class USphereComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
+class UStaticMesh;
 
 UCLASS(config=Game)
 class ATetrisGangProjectile : public AActor
@@ -33,8 +34,6 @@ protected:
 public:
 	ATetrisGangProjectile();
 
-	void Fire();
-
 	/** called when projectile hits something */
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -45,13 +44,13 @@ public:
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Rotation)
-	Rotations rotation;
+	Rotations Rotation;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Type)
-	Pieces piece;
+	Pieces Piece;
 
 	UFUNCTION(BlueprintCallable)
-	void Rotate(Rotations newRotation);
+	void Rotate();
 
 	UFUNCTION()
 	void UpdateMesh(UStaticMesh *NewMesh);

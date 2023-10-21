@@ -10,7 +10,7 @@ void ATetrisGangProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PieceMesh = FindComponentByTag<UStaticMeshComponent>(TEXT("Mesh"));
+	PieceMesh = Cast<UStaticMeshComponent>(GetComponentByClass(UStaticMeshComponent::StaticClass()));
 }
 
 ATetrisGangProjectile::ATetrisGangProjectile()
@@ -31,8 +31,6 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	//ProjectileMovement->InitialSpeed = 0.f;
-	//ProjectileMovement->MaxSpeed = 0.f;
 	ProjectileMovement->InitialSpeed = 3000.f;
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
@@ -41,13 +39,6 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
-}
-
-
-void ATetrisGangProjectile::Fire()
-{
-	ProjectileMovement->InitialSpeed = 3000.f;
-	ProjectileMovement->MaxSpeed = 3000.f;
 }
 
 void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -66,11 +57,9 @@ void ATetrisGangProjectile::UpdateMesh(UStaticMesh *NewMesh)
 	PieceMesh->SetStaticMesh(NewMesh);
 }
 
-void ATetrisGangProjectile::Rotate(Rotations newRotation)
+void ATetrisGangProjectile::Rotate()
 {
-	rotation = newRotation;
-
-	switch (rotation)
+	switch (Rotation)
 	{
 		case Rotations::Up: 
 			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 0.0));

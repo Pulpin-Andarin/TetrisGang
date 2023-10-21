@@ -33,9 +33,9 @@ enum class Pieces : uint8
 class TETRISGANG_API Constantes
 {
 public:
-	Rotations GetRandomRotation();
+	static Rotations GetRandomRotation();
 
-	Pieces GetRandomPiece();
+	static Pieces GetRandomPiece();
 
 	//static UStaticMesh* GetPieceMesh(Pieces piece);
 
