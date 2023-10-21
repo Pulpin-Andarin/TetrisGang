@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Constantes.h"
 #include "TP_WeaponComponent.generated.h"
 
 class ATetrisGangCharacter;
@@ -38,6 +39,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* FireAction;
 
+	/** Rotate Bullet Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		UInputAction* RotateBulletLeftAction;
+
+
+	/** Rotate Bullet Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		UInputAction* RotateBulletRightAction;
+
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
@@ -49,6 +59,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
 
+	UFUNCTION()
+	void CreateProjectile();
+
+	UFUNCTION()
+	void RotateBulletLeft();
+
+	UFUNCTION()
+	void RotateBulletRight();
+
 protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()
@@ -57,4 +76,8 @@ protected:
 private:
 	/** The Character holding this weapon*/
 	ATetrisGangCharacter* Character;
+
+	Rotations ActualRotation = Rotations::Up;
+
+	ATetrisGangProjectile* ActualProjectile;
 };

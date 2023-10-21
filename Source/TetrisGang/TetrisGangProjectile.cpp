@@ -26,13 +26,20 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 3000.f;
-	ProjectileMovement->MaxSpeed = 3000.f;
+	ProjectileMovement->InitialSpeed = 0.f;
+	ProjectileMovement->MaxSpeed = 0.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
+	ProjectileMovement->ProjectileGravityScale = 0.f;
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
+}
+
+void ATetrisGangProjectile::Fire()
+{
+	ProjectileMovement->InitialSpeed = 3000.f;
+	ProjectileMovement->MaxSpeed = 3000.f;
 }
 
 void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -53,5 +60,21 @@ void ATetrisGangProjectile::UpdateMesh(UStaticMesh *NewMesh)
 
 void ATetrisGangProjectile::Rotate(Rotations newRotation)
 {
+	rotation = newRotation;
 
+	switch (rotation)
+	{
+		case Rotations::Up: 
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 0.0));
+			break;
+		case Rotations::Right:
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 90.0));
+			break;
+		case Rotations::Down:
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 180.0));
+			break;
+		case Rotations::Left:
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, -90.0));
+			break;
+	}
 }

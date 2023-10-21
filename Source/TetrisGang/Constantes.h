@@ -9,9 +9,9 @@
 UENUM(BlueprintType)
 enum class Rotations : uint8{
 	Up UMETA(DisplayName="Up"),
-	Down UMETA(DisplayName="Down"),
-	Left UMETA(DisplayName="Left"),
-	Right UMETA(DisplayName="Right")
+	Right UMETA(DisplayName = "Right"),
+	Down UMETA(DisplayName = "Down"),
+	Left UMETA(DisplayName="Left")
 };
 
 UENUM(BlueprintType)

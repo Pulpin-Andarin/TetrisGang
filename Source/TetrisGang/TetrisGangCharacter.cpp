@@ -107,6 +107,7 @@ void ATetrisGangCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+
 void ATetrisGangCharacter::SetHasRifle(bool bNewHasRifle)
 {
 	bHasRifle = bNewHasRifle;

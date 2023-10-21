@@ -24,10 +24,12 @@ class ATetrisGangProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* PieceMesh;
 public:
 	ATetrisGangProjectile();
+
+	void Fire();
 
 	/** called when projectile hits something */
 	UFUNCTION()
