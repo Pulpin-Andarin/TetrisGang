@@ -15,6 +15,7 @@ class UInputMappingContext;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeath);
 
 UCLASS(config=Game)
 class ATetrisGangCharacter : public ACharacter
@@ -64,6 +65,15 @@ public:
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
+
+	UPROPERTY(EditAnywhere, Category = Health)
+		int Health = 3;
+
+	UPROPERTY()
+		FPlayerDeath PlayerDeath;
+
+	UFUNCTION()
+		virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 protected:
 	/** Called for movement input */
