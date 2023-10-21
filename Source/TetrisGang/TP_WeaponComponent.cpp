@@ -158,7 +158,9 @@ void UTP_WeaponComponent::CreateRandomProjectile()
   }
   //FString  s = ActualMesh->GetFName();
   //UE_LOG(LogTemplateCharacter, Error, TEXT("%s", ));
-
+  if (!IsValid(ActualMesh) || ActualMesh == nullptr) {
+      UE_LOG(LogTemplateCharacter, Warning, TEXT("Actual Mesh is null"));
+  } 
   StaticProjectile->SetStaticMesh(ActualMesh);
 }
 
