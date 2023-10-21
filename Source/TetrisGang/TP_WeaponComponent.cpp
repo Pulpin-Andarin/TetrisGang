@@ -25,7 +25,7 @@ void UTP_WeaponComponent::Fire()
 	{
 		return;
 	}
-	
+
 	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
@@ -41,55 +41,34 @@ void UTP_WeaponComponent::Fire()
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 			// Spawn the projectile at the muzzle
-			World->SpawnActor<ATetrisGangProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			ATetrisGangProjectile* ActualProjectile = World->SpawnActor<ATetrisGangProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			ActualProjectile->Rotation = ActualRotation; 
+			ActualProjectile->Piece = ActualPiece;
+			ActualProjectile->Rotate();
+			ActualProjectile->UpdateMesh(ActualMesh);
 		}
-	}
-	/*if (IsValid(ActualProjectile))
-	{
-		CreateProjectile();
-		ActualProjectile->Fire();
-	}
-	// Try and play the sound if specified
-	if (FireSound != nullptr)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
-	}*/
-	
-	// Try and play a firing animation if specified
-	if (FireAnimation != nullptr)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
-		if (AnimInstance != nullptr)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
-	}
 
-	ActualRotation = Rotations::Up;
+		// Try and play the sound if specified
+		if (FireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
+		}
+
+		// Try and play a firing animation if specified
+		if (FireAnimation != nullptr)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 1.f);
+			}
+		}
+
+		ActualRotation = Rotations::Up;
+	}
 }
 
-void UTP_WeaponComponent::CreateProjectile() {
-	// Try and fire a projectile
-	if (ProjectileClass != nullptr)
-	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
-		{
-			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
-			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
-
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-			// Spawn the projectile at the muzzle
-			ActualProjectile = World->SpawnActor<ATetrisGangProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-		}
-	}
-}
 
 void UTP_WeaponComponent::AttachWeapon(ATetrisGangCharacter* TargetCharacter)
 {
@@ -131,7 +110,40 @@ void UTP_WeaponComponent::AttachWeapon(ATetrisGangCharacter* TargetCharacter)
 		}
 	}
 
-	//CreateProjectile();
+	CreateRandomProjectile();
+}
+
+void UTP_WeaponComponent::CreateRandomProjectile()
+{
+	ActualPiece = Constantes::GetRandomPiece();
+	ActualRotation = Rotations::Up;
+
+	switch (ActualPiece)
+	{
+		case Pieces::Yelow:
+			ActualMesh = AvailablePiecesMeshes[0];
+			break;
+		case Pieces::Cyan:
+			ActualMesh = AvailablePiecesMeshes[1];
+			break;
+		case Pieces::Green:
+			ActualMesh = AvailablePiecesMeshes[2];
+			break;
+		case Pieces::Red:
+			ActualMesh = AvailablePiecesMeshes[3];
+			break;
+		case Pieces::Orange:
+			ActualMesh = AvailablePiecesMeshes[4];
+			break;
+		case Pieces::Blue:
+			ActualMesh = AvailablePiecesMeshes[5];
+			break;
+		case Pieces::Purple:
+			ActualMesh = AvailablePiecesMeshes[6];
+			break;
+		default:
+			break;
+	}
 }
 
 void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -173,11 +185,6 @@ void UTP_WeaponComponent::RotateBulletLeft()
 			UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Up"));
 			break;
 	}
-
-	if (IsValid(ActualProjectile))
-	{
-		ActualProjectile->Rotate(ActualRotation);
-	}
 }
 
 void UTP_WeaponComponent::RotateBulletRight()
@@ -187,24 +194,23 @@ void UTP_WeaponComponent::RotateBulletRight()
 	switch (ActualRotation) {
 		case Rotations::Up:
 			ActualRotation = Rotations::Right;
+			StaticProjectile->SetRelativeRotation(FRotator(0.0, 0.0, 90.0));
 			UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Right"));
 			break;
 		case Rotations::Right:
 			ActualRotation = Rotations::Down;
+			StaticProjectile->SetRelativeRotation(FRotator(0.0, 0.0, 90.0));
 			UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Down"));
 			break;
 		case Rotations::Down:
 			ActualRotation = Rotations::Left;
+			StaticProjectile->SetRelativeRotation(FRotator(0.0, 0.0, 90.0));
 			UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: left"));
 			break;
 		case Rotations::Left:
 			ActualRotation = Rotations::Up;
+			StaticProjectile->SetRelativeRotation(FRotator(0.0, 0.0, 90.0));
 			UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Up"));
 			break;
-	}
-
-	if (IsValid(ActualProjectile))
-	{
-		ActualProjectile->Rotate(ActualRotation);
 	}
 }
