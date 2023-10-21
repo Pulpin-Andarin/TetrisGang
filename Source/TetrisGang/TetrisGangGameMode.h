@@ -13,6 +13,9 @@ class ATetrisGangGameMode : public AGameModeBase
 
 public:
 	ATetrisGangGameMode();
+
+	UPROPERTY()
+		int CurrentLevel;
 };
 
 
