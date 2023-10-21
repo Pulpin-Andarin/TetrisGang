@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Spawns/Spawn.h"
+#include "Spawn.h"
 
 // Sets default values
 ASpawn::ASpawn()
