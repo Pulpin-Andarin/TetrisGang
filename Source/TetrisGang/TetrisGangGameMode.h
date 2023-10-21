@@ -9,13 +9,29 @@
 UCLASS(minimalapi)
 class ATetrisGangGameMode : public AGameModeBase
 {
-	GENERATED_BODY()
+  GENERATED_BODY()
 
 public:
-	ATetrisGangGameMode();
+  ATetrisGangGameMode();
 
-	UPROPERTY()
-		int CurrentLevel;
+  UPROPERTY()
+  int CurrentLevel;
+
+  UPROPERTY(VisibleAnywhere)
+  int CurrentEnemyDeaths=0; 
+  
+  UPROPERTY(EditAnywhere)
+   int DeathsPerLevel=10;  
+   
+   UPROPERTY(EditAnywhere)
+   int MaxLevel =10;
+
+  UFUNCTION()
+  void UpdateEnemyCounter();
+
+  UFUNCTION()
+  void UpdateLevel();
+
 };
 
 

@@ -9,18 +9,30 @@
 UCLASS()
 class TETRISGANG_API ASpawn : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASpawn();
+  GENERATED_BODY()
+
+public:
+  // Sets default values for this actor's properties
+  ASpawn();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+  // Called when the game starts or when spawned
+  virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
+public:
+
+  UFUNCTION(BlueprintCallable)
+  void SpawnEnemy();
+
+  // Called every frame
+  virtual void Tick(float DeltaTime) override;
+
+  UPROPERTY(EditAnywhere)
+  float CooldownBetweenSpawns = 5.f;
+
+  UPROPERTY(EditAnywhere)
+  /* Handle to manage the timer */
+  FTimerHandle FuzeTimerHandle;
 
 };

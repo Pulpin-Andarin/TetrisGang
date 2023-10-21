@@ -5,12 +5,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "../Constantes.h"
+//#include <Actions/PawnAction_Move.h>
 #include "MeleEnemy.generated.h"
 
 class UWalkToComponent;
 class UCapsuleComponent;
 class UCharacterMovementComponent;
+class AAIController;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMeleEnemyDeath);
 
 UCLASS()
 class TETRISGANG_API AMeleEnemy : public ACharacter
@@ -40,8 +43,6 @@ public:
 			bool bFromSweep,
 			const FHitResult& SweepResult);
 
-	UFUNCTION()
-		void Reactivate();
 
 	bool bIsActive;
 
@@ -51,8 +52,8 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UCharacterMovementComponent* MovementComponent;
 
-	/*UPROPERTY()
-		AAIController* AICharacterController;*/
+	UPROPERTY()
+		AAIController* AICharacterController;
 
 	float InitialSpeed = 0.0f;
 
@@ -61,4 +62,16 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		Pieces Pieces;
+
+		UPROPERTY()
+		FMeleEnemyDeath MeleEnemyDeath;
+
+		UFUNCTION()
+		void EnemyDeath();
+
+		UFUNCTION()
+		void Reactivate();
+
+		UFUNCTION()
+		void Deactivate();
 };

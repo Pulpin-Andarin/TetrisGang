@@ -12,48 +12,53 @@ class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UStaticMesh;
 
-UCLASS(config=Game)
+UCLASS(config = Game)
 class ATetrisGangProjectile : public AActor
 {
-	GENERATED_BODY()
+  GENERATED_BODY()
 
-	/** Sphere collision component */
-	UPROPERTY(VisibleDefaultsOnly, Category=Projectile)
-	USphereComponent* CollisionComp;
+  /** Sphere collision component */
+  UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+  USphereComponent* CollisionComp;
 
-	/** Projectile movement component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	UProjectileMovementComponent* ProjectileMovement;
+  /** Projectile movement component */
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+  UProjectileMovementComponent* ProjectileMovement;
 
-	
-	UStaticMeshComponent* PieceMesh;
+
+  UStaticMeshComponent* PieceMesh;
 
 protected:
-	virtual void BeginPlay();
+  virtual void BeginPlay();
 
 public:
-	ATetrisGangProjectile();
+  ATetrisGangProjectile();
 
-	/** called when projectile hits something */
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+  /** called when projectile hits something */
+  UFUNCTION()
+  void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-	/** Returns CollisionComp subobject **/
-	USphereComponent* GetCollisionComp() const { return CollisionComp; }
-	/** Returns ProjectileMovement subobject **/
-	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+  /** Returns CollisionComp subobject **/
+  USphereComponent* GetCollisionComp() const { return CollisionComp; }
+  /** Returns ProjectileMovement subobject **/
+  UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Rotation)
-	Rotations Rotation;
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Rotation)
+  Rotations Rotation;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Type)
-	Pieces Piece;
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Type)
+  Pieces Piece;
 
-	UFUNCTION(BlueprintCallable)
-	void Rotate();
+  UFUNCTION(BlueprintCallable)
+  void Rotate();
 
-	UFUNCTION()
-	void UpdateMesh(UStaticMesh *NewMesh);
-	
+  UFUNCTION()
+  void UpdateMesh(UStaticMesh* NewMesh);
+
+  //UFUNCTION()
+  //void Reactivate();
+
+  //UFUNCTION()
+  //void Deactivate();
 };
 
