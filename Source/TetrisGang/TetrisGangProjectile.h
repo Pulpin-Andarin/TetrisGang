@@ -55,10 +55,10 @@ public:
   UFUNCTION()
   void UpdateMesh(UStaticMesh* NewMesh);
 
-  //UFUNCTION()
-  //void Reactivate();
+  UFUNCTION()
+  void Reactivate();
 
-  //UFUNCTION()
-  //void Deactivate();
+  UFUNCTION()
+  void Deactivate();
 };
 

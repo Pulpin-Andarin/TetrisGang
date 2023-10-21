@@ -2,7 +2,9 @@
 
 #include "TetrisGangGameMode.h"
 #include "TetrisGangCharacter.h"
+#include "./PooledPork/PooledPork.h"
 #include "UObject/ConstructorHelpers.h"
+#include <Kismet/GameplayStatics.h>
 
 ATetrisGangGameMode::ATetrisGangGameMode()
   : Super()
@@ -32,6 +34,12 @@ void ATetrisGangGameMode::UpdateLevel()
     CurrentLevel++;
   }
 
+}
+
+void ATetrisGangGameMode::BeginPlay()
+{
+  Pool = Cast<APooledPork>(UGameplayStatics::GetActorOfClass(GetWorld(), APooledPork::StaticClass()));
+  Pool->InitializePool();
 }
 
 

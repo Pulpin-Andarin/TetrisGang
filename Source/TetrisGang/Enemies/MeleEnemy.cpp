@@ -119,6 +119,7 @@ void AMeleEnemy::Deactivate()
   }
 
   GetCharacterMovement()->GravityScale = 0.f;
+  //ReturnToPool//
 }
 //
 //void AMeleEnemy::Activate()

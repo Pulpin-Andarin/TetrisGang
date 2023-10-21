@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "TetrisGangGameMode.generated.h"
 
+class APooledPork;
 UCLASS(minimalapi)
 class ATetrisGangGameMode : public AGameModeBase
 {
@@ -18,13 +19,13 @@ public:
   int CurrentLevel;
 
   UPROPERTY(VisibleAnywhere)
-  int CurrentEnemyDeaths=0; 
-  
+  int CurrentEnemyDeaths = 0;
+
   UPROPERTY(EditAnywhere)
-   int DeathsPerLevel=10;  
-   
-   UPROPERTY(EditAnywhere)
-   int MaxLevel =10;
+  int DeathsPerLevel = 10;
+
+  UPROPERTY(EditAnywhere)
+  int MaxLevel = 10;
 
   UFUNCTION()
   void UpdateEnemyCounter();
@@ -32,6 +33,9 @@ public:
   UFUNCTION()
   void UpdateLevel();
 
+  APooledPork* Pool;
+
+  virtual void BeginPlay() override;
 };
 
 
