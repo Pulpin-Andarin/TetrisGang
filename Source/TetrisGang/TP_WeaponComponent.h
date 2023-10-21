@@ -4,57 +4,90 @@
 
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Constantes.h"
 #include "TP_WeaponComponent.generated.h"
 
 class ATetrisGangCharacter;
 
-UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TETRISGANG_API UTP_WeaponComponent : public USkeletalMeshComponent
 {
-	GENERATED_BODY()
+  GENERATED_BODY()
 
 public:
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class ATetrisGangProjectile> ProjectileClass;
+  /** Projectile class to spawn */
+  UPROPERTY(EditDefaultsOnly, Category = Projectile)
+  TSubclassOf<class ATetrisGangProjectile> ProjectileClass;
 
-	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	USoundBase* FireSound;
-	
-	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	UAnimMontage* FireAnimation;
+  /** Sound to play each time we fire */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+  USoundBase* FireSound;
 
-	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	FVector MuzzleOffset;
+  /** AnimMontage to play each time we fire */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+  UAnimMontage* FireAnimation;
 
-	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	class UInputMappingContext* FireMappingContext;
+  /** Gun muzzle's offset from the characters location */
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+  FVector MuzzleOffset;
 
-	/** Fire Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	class UInputAction* FireAction;
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+  TArray<UStaticMesh*> AvailablePiecesMeshes;
 
-	/** Sets default values for this component's properties */
-	UTP_WeaponComponent();
+  /** MappingContext */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+  class UInputMappingContext* FireMappingContext;
 
-	/** Attaches the actor to a FirstPersonCharacter */
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void AttachWeapon(ATetrisGangCharacter* TargetCharacter);
+  /** Fire Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+  class UInputAction* FireAction;
 
-	/** Make the weapon Fire a Projectile */
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void Fire();
+  /** Rotate Bullet Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* RotateBulletLeftAction;
+
+
+  /** Rotate Bullet Input Action */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* RotateBulletRightAction;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  UStaticMeshComponent* StaticProjectile;
+
+  /** Sets default values for this component's properties */
+  UTP_WeaponComponent();
+
+  /** Attaches the actor to a FirstPersonCharacter */
+  UFUNCTION(BlueprintCallable, Category = "Weapon")
+  void AttachWeapon(ATetrisGangCharacter* TargetCharacter);
+
+  /** Make the weapon Fire a Projectile */
+  UFUNCTION(BlueprintCallable, Category = "Weapon")
+  void Fire();
+
+  UFUNCTION()
+  void CreateRandomProjectile();
+
+  UFUNCTION()
+  void RotateBulletLeft();
+
+  UFUNCTION()
+  void RotateBulletRight();
 
 protected:
-	/** Ends gameplay for this component. */
-	UFUNCTION()
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+  /** Ends gameplay for this component. */
+  UFUNCTION()
+  virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
-	/** The Character holding this weapon*/
-	ATetrisGangCharacter* Character;
+  /** The Character holding this weapon*/
+  ATetrisGangCharacter* Character;
+
+  Rotations ActualRotation = Rotations::Up;
+
+  Pieces ActualPiece = Pieces::Blue;
+
+  UStaticMesh* ActualMesh;
+
+
 };

@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Constantes.h"
 #include "TetrisGangProjectile.generated.h"
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class UStaticMeshComponent;
+class UStaticMesh;
 
 UCLASS(config=Game)
 class ATetrisGangProjectile : public AActor
@@ -22,6 +25,12 @@ class ATetrisGangProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
+	
+	UStaticMeshComponent* PieceMesh;
+
+protected:
+	virtual void BeginPlay();
+
 public:
 	ATetrisGangProjectile();
 
@@ -33,5 +42,18 @@ public:
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Rotation)
+	Rotations Rotation;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=Type)
+	Pieces Piece;
+
+	UFUNCTION(BlueprintCallable)
+	void Rotate();
+
+	UFUNCTION()
+	void UpdateMesh(UStaticMesh *NewMesh);
+	
 };
 

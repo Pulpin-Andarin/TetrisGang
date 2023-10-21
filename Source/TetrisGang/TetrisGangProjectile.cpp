@@ -2,9 +2,18 @@
 
 #include "TetrisGangProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "Constantes.h"
 
-ATetrisGangProjectile::ATetrisGangProjectile() 
+void ATetrisGangProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PieceMesh = Cast<UStaticMeshComponent>(GetComponentByClass(UStaticMeshComponent::StaticClass()));
+}
+
+ATetrisGangProjectile::ATetrisGangProjectile()
 {
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
@@ -26,6 +35,7 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
+	ProjectileMovement->ProjectileGravityScale = 0.f;
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
@@ -39,5 +49,29 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
 		Destroy();
+	}
+}
+
+void ATetrisGangProjectile::UpdateMesh(UStaticMesh *NewMesh)
+{
+	PieceMesh->SetStaticMesh(NewMesh);
+}
+
+void ATetrisGangProjectile::Rotate()
+{
+	switch (Rotation)
+	{
+		case Rotations::Up: 
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 0.0));
+			break;
+		case Rotations::Right:
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 90.0));
+			break;
+		case Rotations::Down:
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 180.0));
+			break;
+		case Rotations::Left:
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, -90.0));
+			break;
 	}
 }
