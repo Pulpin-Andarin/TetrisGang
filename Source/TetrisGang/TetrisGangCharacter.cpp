@@ -54,6 +54,8 @@ void ATetrisGangCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	UCapsuleComponent* collision = GetCapsuleComponent();
+	collision->OnComponentBeginOverlap.AddDynamic(this, &ATetrisGangCharacter::OnOverlapBegin);
 
 }
 
@@ -116,4 +118,12 @@ void ATetrisGangCharacter::SetHasRifle(bool bNewHasRifle)
 bool ATetrisGangCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+void ATetrisGangCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (Health-- == 0)
+	{
+		PlayerDeath.Broadcast();
+	}
 }
