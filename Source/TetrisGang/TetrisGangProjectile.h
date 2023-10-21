@@ -24,8 +24,12 @@ class ATetrisGangProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
-	UPROPERTY(EditAnywhere)
+	
 	UStaticMeshComponent* PieceMesh;
+
+protected:
+	virtual void BeginPlay();
+
 public:
 	ATetrisGangProjectile();
 

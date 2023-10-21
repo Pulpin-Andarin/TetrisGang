@@ -6,7 +6,14 @@
 #include "Components/SphereComponent.h"
 #include "Constantes.h"
 
-ATetrisGangProjectile::ATetrisGangProjectile() 
+void ATetrisGangProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PieceMesh = FindComponentByTag<UStaticMeshComponent>(TEXT("Mesh"));
+}
+
+ATetrisGangProjectile::ATetrisGangProjectile()
 {
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
@@ -14,8 +21,6 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
 	CollisionComp->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
 
-	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PieceMesh"));
-	
 	// Players can't walk on it
 	CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 	CollisionComp->CanCharacterStepUpOn = ECB_No;
@@ -26,8 +31,10 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 0.f;
-	ProjectileMovement->MaxSpeed = 0.f;
+	//ProjectileMovement->InitialSpeed = 0.f;
+	//ProjectileMovement->MaxSpeed = 0.f;
+	ProjectileMovement->InitialSpeed = 3000.f;
+	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 	ProjectileMovement->ProjectileGravityScale = 0.f;
@@ -35,6 +42,7 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
 }
+
 
 void ATetrisGangProjectile::Fire()
 {
