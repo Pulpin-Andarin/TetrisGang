@@ -25,16 +25,35 @@ void UTP_WeaponComponent::Fire()
 	{
 		return;
 	}
-
-	if (IsValid(ActualProjectile)) 
+	
+	if (ProjectileClass != nullptr)
 	{
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
+		{
+			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+			const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
+
+			//Set Spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			// Spawn the projectile at the muzzle
+			World->SpawnActor<ATetrisGangProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+		}
+	}
+	/*if (IsValid(ActualProjectile))
+	{
+		CreateProjectile();
 		ActualProjectile->Fire();
 	}
 	// Try and play the sound if specified
 	if (FireSound != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
-	}
+	}*/
 	
 	// Try and play a firing animation if specified
 	if (FireAnimation != nullptr)
@@ -112,7 +131,7 @@ void UTP_WeaponComponent::AttachWeapon(ATetrisGangCharacter* TargetCharacter)
 		}
 	}
 
-	CreateProjectile();
+	//CreateProjectile();
 }
 
 void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
