@@ -9,6 +9,8 @@
 
 class ATetrisGangCharacter;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShoot);
+
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class TETRISGANG_API UTP_WeaponComponent : public USkeletalMeshComponent
 {
@@ -54,6 +56,9 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite)
   UStaticMeshComponent* StaticProjectile;
 
+  UPROPERTY(BlueprintAssignable)
+	  FShoot ShootEvent;
+
   /** Sets default values for this component's properties */
   UTP_WeaponComponent();
 
@@ -74,6 +79,14 @@ public:
   UFUNCTION()
   void RotateBulletRight();
 
+  UFUNCTION()
+  void UpdateProjectile();
+
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	  Pieces NextPiece = Pieces::Red;
+
+
 protected:
   /** Ends gameplay for this component. */
   UFUNCTION()
@@ -88,6 +101,10 @@ private:
 
   UPROPERTY(VisibleAnyWhere)
   Pieces ActualPiece = Pieces::Blue;
+
+
+  UPROPERTY(VisibleAnyWhere)
+  Rotations NextRotation = Rotations::Up;
 
   UPROPERTY(VisibleAnyWhere)
   UStaticMesh* ActualMesh;
