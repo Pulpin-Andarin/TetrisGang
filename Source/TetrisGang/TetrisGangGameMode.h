@@ -27,6 +27,9 @@ public:
   int DeathsPerLevel = 10;
 
   UPROPERTY(EditAnywhere)
+  int TotalPoints = 0;
+
+  UPROPERTY(EditAnywhere)
   int MaxLevel = 10;
 
   UFUNCTION()
