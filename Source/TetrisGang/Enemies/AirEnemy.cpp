@@ -5,6 +5,7 @@
 #include <TetrisGang/TetrisGangGameMode.h>
 #include "AIController.h"
 #include "BrainComponent.h"
+#include <TetrisGang/Constantes.h>
 
 // Sets default values
 AAirEnemy::AAirEnemy()
@@ -84,7 +85,9 @@ void AAirEnemy::Reactivate()
   }
 
   //GetCharacterMovement()->GravityScale = 1.f;
+  Pieces = Constantes::GetRandomPiece();
 
+  PieceRotation = Constantes::GetRandomRotation();
 }
 
 void AAirEnemy::Deactivate()

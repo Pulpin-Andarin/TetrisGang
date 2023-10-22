@@ -5,12 +5,17 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Constantes.h"
+#include "Enemies/AirEnemy.h"
+#include "Enemies/MeleEnemy.h"
+#include "TetrisGangGameMode.h"
+#include "./PooledPork/PooledPork.h"
 
 void ATetrisGangProjectile::BeginPlay()
 {
   Super::BeginPlay();
 
   PieceMesh = Cast<UStaticMeshComponent>(GetComponentByClass(UStaticMeshComponent::StaticClass()));
+  GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 ATetrisGangProjectile::ATetrisGangProjectile()
@@ -44,37 +49,60 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
   // Only add impulse and destroy projectile if we hit a physics
-  if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+  if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) /*&& OtherComp->IsSimulatingPhysics()*/)
   {
-    OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+    AAirEnemy* AirEnemy = Cast<AAirEnemy>(OtherActor);
+    if (AirEnemy)
+    {
+      if (AirEnemy->Pieces == Piece && AirEnemy->PieceRotation == Rotation)
+      {
+        GameMode->Pool->ReturnToPool(AirEnemy);
+        Destroy();
+      }
+    }
+    else {
+      AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(OtherActor);
+      if (MeleEnemy)
+      {
+        if (MeleEnemy->Pieces == Piece && MeleEnemy->PieceRotation == Rotation)
+        {
+          GameMode->Pool->ReturnToPool(MeleEnemy);
+          Destroy();
+        }
+      }
+     /* else {
 
-    Deactivate();
+        OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+      }*/
+    }
+
+    //Deactivate();
   }
 }
 
 void ATetrisGangProjectile::UpdateMesh(UStaticMesh* NewMesh)
 {
-	PieceMesh->SetStaticMesh(NewMesh);
-	PieceMesh->SetRelativeScale3D(FVector(15.0, 15.0, 15.0));
+  PieceMesh->SetStaticMesh(NewMesh);
+  PieceMesh->SetRelativeScale3D(FVector(15.0, 15.0, 15.0));
 }
 
 void ATetrisGangProjectile::Rotate()
 {
-	switch (Rotation)
-	{
-		case Rotations::Up:
-			PieceMesh->SetRelativeRotation(FRotator(0.0, 90.0, 90.0));
-			break;
-		case Rotations::Right:
-			PieceMesh->SetRelativeRotation(FRotator(90.0, 90.0, 90.0));
-			break;
-		case Rotations::Down:
-			PieceMesh->SetRelativeRotation(FRotator(180.0, 90.0, 90.0));
-			break;
-		case Rotations::Left:
-			PieceMesh->SetRelativeRotation(FRotator(-90.0, 90.0, 90.0));
-			break;
-	}
+  switch (Rotation)
+  {
+  case Rotations::Up:
+    PieceMesh->SetRelativeRotation(FRotator(0.0, 90.0, 90.0));
+    break;
+  case Rotations::Right:
+    PieceMesh->SetRelativeRotation(FRotator(90.0, 90.0, 90.0));
+    break;
+  case Rotations::Down:
+    PieceMesh->SetRelativeRotation(FRotator(180.0, 90.0, 90.0));
+    break;
+  case Rotations::Left:
+    PieceMesh->SetRelativeRotation(FRotator(-90.0, 90.0, 90.0));
+    break;
+  }
 }
 
 

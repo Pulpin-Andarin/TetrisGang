@@ -95,7 +95,11 @@ void AMeleEnemy::Reactivate()
 
   GetCharacterMovement()->GravityScale = 1.f;
 
+  Pieces = Constantes::GetRandomPiece();
+
+  PieceRotation = Constantes::GetRandomRotation();
 }
+
 void AMeleEnemy::Deactivate()
 {
   SetActorTickEnabled(false);
@@ -118,6 +122,7 @@ void AMeleEnemy::Deactivate()
 
   GetCharacterMovement()->GravityScale = 0.f;
   //ReturnToPool//
+  //SetActorLocation();
 }
 //
 //void AMeleEnemy::Activate()
