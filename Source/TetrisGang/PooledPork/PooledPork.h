@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "PooledPork.generated.h"
 
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPoolCreated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPoolCreated);
 
 class AAirEnemy;
 class AMeleEnemy;
@@ -35,7 +35,7 @@ public:
 
   //Multimap that stores the index of each actor in the pool. Note: Not neccesary at the moment
   /*TMultiMap<TSubclassOf<AActor>, int32> IndexesSpawnedActors;*/
-  //FPoolCreated PoolCreated;
+  FPoolCreated PoolCreated;
 
   UPROPERTY()
   TArray<AAirEnemy*> AirEnemies;

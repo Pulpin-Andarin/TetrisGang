@@ -45,9 +45,9 @@ public:
   UFUNCTION()
   void Deactivate();
 
-  UPROPERTY()
+  UPROPERTY(EditAnyWhere, BlueprintReadWrite)
   UBoxComponent* BoxCollision;
 
-  UPROPERTY()
+  UPROPERTY(EditAnyWhere, BlueprintReadWrite)
   UStaticMeshComponent* AirMesh;
 };

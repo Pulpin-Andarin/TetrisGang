@@ -5,6 +5,7 @@
 #include "./PooledPork/PooledPork.h"
 #include "UObject/ConstructorHelpers.h"
 #include <Kismet/GameplayStatics.h>
+#include "./Spawns/Spawn.h"
 
 ATetrisGangGameMode::ATetrisGangGameMode()
   : Super()
@@ -13,7 +14,6 @@ ATetrisGangGameMode::ATetrisGangGameMode()
   static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
   DefaultPawnClass = PlayerPawnClassFinder.Class;
   CurrentLevel = 1;
-
 }
 
 void ATetrisGangGameMode::UpdateEnemyCounter()
@@ -36,10 +36,23 @@ void ATetrisGangGameMode::UpdateLevel()
 
 }
 
-void ATetrisGangGameMode::BeginPlay()
+void ATetrisGangGameMode::Initialize()
 {
   Pool = Cast<APooledPork>(UGameplayStatics::GetActorOfClass(GetWorld(), APooledPork::StaticClass()));
-  Pool->InitializePool();
+  if (IsValid(Pool))
+  {
+    TArray<AActor*> Spawns;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpawn::StaticClass(), Spawns);
+    for (AActor* A : Spawns)
+    {
+      ASpawn* Spawn = Cast<ASpawn>(A);
+      Pool->PoolCreated.AddDynamic(Spawn, &ASpawn::Initialize);
+    }
+
+    Pool->InitializePool();
+  }
 }
+
+
 
 

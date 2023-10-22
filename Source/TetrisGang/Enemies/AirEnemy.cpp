@@ -22,8 +22,8 @@ void AAirEnemy::BeginPlay()
   AirEnemyDeath.AddDynamic(GameMode, &ATetrisGangGameMode::UpdateEnemyCounter);
   AIController = Cast<AAIController>(GetController());
 
-  BoxCollision = Cast<UBoxComponent>(FindComponentByClass(UBoxComponent::StaticClass()));
-  AirMesh = Cast<UStaticMeshComponent>(FindComponentByClass(UStaticMeshComponent::StaticClass()));
+  AirMesh = Cast<UStaticMeshComponent>(FindComponentByTag<UStaticMeshComponent>(TEXT("BoxMesh")));
+  BoxCollision = Cast<UBoxComponent>(FindComponentByTag<UBoxComponent>(FName(TEXT("BoxColl"))));
 }
 
 // Called every frame
@@ -51,12 +51,11 @@ void AAirEnemy::Reactivate()
 
   SetActorTickEnabled(true);
 
-  if (GetController() == nullptr)
-  {
-    AIController->Possess(this);
-  }
+  //if (GetController() == nullptr)
+  //{
+  //  AIController->Possess(this);
+  //}
 
-  AIController->Reset();
 
   //if (IsValid(MovementComponent))
   //{
@@ -77,11 +76,12 @@ void AAirEnemy::Reactivate()
   }
 
 
-  if (IsValid(AIController))
-  {
-    AIController->GetBrainComponent()->Activate();
-    AIController->GetBrainComponent()->RestartLogic();
-  }
+  //if (IsValid(AIController))
+  //{
+  //  AIController->Reset();
+  //  AIController->GetBrainComponent()->Activate();
+  //  AIController->GetBrainComponent()->RestartLogic();
+  //}
 
   //GetCharacterMovement()->GravityScale = 1.f;
 
@@ -97,15 +97,15 @@ void AAirEnemy::Deactivate()
     GetMesh()->Deactivate();
   }*/
 
-  if (IsValid(AIController))
+ /* if (IsValid(GetController()))
   {
-    if (AIController != nullptr)
+    if (GetController() != nullptr)
     {
-      AIController->GetBrainComponent()->StopLogic(FString("Go to pool"));
-      AIController->GetBrainComponent()->Deactivate();
-      AIController->UnPossess();
+      GetController()->GetBrainComponent()->StopLogic(FString("Go to pool"));
+      GetController()->GetBrainComponent()->Deactivate();
+      GetController()->UnPossess();
     }
-  }
+  }*/
   //ReturnToPool//
   // 
   //GetCharacterMovement()->GravityScale = 0.f;
