@@ -6,7 +6,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "BrainComponent.h"
+#include "Components/BillboardComponent.h"
 #include <TetrisGang/TetrisGangGameMode.h>
+
 
 // Sets default values
 AMeleEnemy::AMeleEnemy()
@@ -14,6 +16,8 @@ AMeleEnemy::AMeleEnemy()
   // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
   PrimaryActorTick.bCanEverTick = true;
 
+  StaticProjectile = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticProjectileComponent"));
+  //StaticProjectile->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -40,6 +44,7 @@ void AMeleEnemy::BeginPlay()
   ATetrisGangGameMode* GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
   MeleEnemyDeath.AddDynamic(GameMode, &ATetrisGangGameMode::UpdateEnemyCounter);
 
+  BillboardComponent = Cast<UBillboardComponent>(FindComponentByTag<UBillboardComponent>(FName(TEXT("billboardPiece"))));
 
 }
 
@@ -98,6 +103,8 @@ void AMeleEnemy::Reactivate()
   Pieces = Constantes::GetRandomPiece();
 
   PieceRotation = Constantes::GetRandomRotation();
+
+  SelectPieceMesh();
 }
 
 void AMeleEnemy::Deactivate()
@@ -149,6 +156,54 @@ void AMeleEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
         Died();
       }
     }*/
+  }
+}
+
+void AMeleEnemy::SelectPieceMesh()
+{
+  int position = 0;
+  switch (PieceRotation) {
+  case Rotations::Up:
+    position = 0;
+    break;
+  case Rotations::Left:
+    position = 1;
+    break;
+  case Rotations::Down:
+    position = 2;
+    break;
+  case Rotations::Right:
+    position = 3;
+    break;
+  }
+
+  StaticProjectileElDeverda->SetRelativeScale3D(FVector(2.5f, 2.5f, 2.5f));
+
+  switch (Pieces)
+  {
+  case Pieces::Yelow:
+    BillboardComponent->SetSprite(YellowTextures[position]);
+    break;
+  case Pieces::Cyan:
+    BillboardComponent->SetSprite(CyamTextures[position]);
+    break;
+  case Pieces::Green:
+    BillboardComponent->SetSprite(GreenTextures[position]);
+    break;
+  case Pieces::Red:
+    BillboardComponent->SetSprite(RedTextures[position]);
+    break;
+  case Pieces::Orange:
+    BillboardComponent->SetSprite(OrangeTextures[position]);
+    break;
+  case Pieces::Blue:
+    BillboardComponent->SetSprite(BlueTextures[position]);
+    break;
+  case Pieces::Purple:
+    BillboardComponent->SetSprite(PurpleTextures[position]);
+    break;
+  default:
+    break;
   }
 }
 

@@ -19,60 +19,95 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMeleEnemyDeath);
 UCLASS()
 class TETRISGANG_API AMeleEnemy : public ACharacter
 {
-	GENERATED_BODY()
+  GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	AMeleEnemy();
+  // Sets default values for this character's properties
+  AMeleEnemy();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+  // Called when the game starts or when spawned
+  virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+  // Called every frame
+  virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+  // Called to bind functionality to input
+  virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION()
-		void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
-			AActor* OtherActor,
-			UPrimitiveComponent* OtherComp,
-			int32 OtherBodyIndex,
-			bool bFromSweep,
-			const FHitResult& SweepResult);
+  UFUNCTION()
+  void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
+    AActor* OtherActor,
+    UPrimitiveComponent* OtherComp,
+    int32 OtherBodyIndex,
+    bool bFromSweep,
+    const FHitResult& SweepResult);
 
 
-	bool bIsActive;
+  bool bIsActive;
 
-	UPROPERTY(EditAnywhere)
-		UCapsuleComponent* CapsuleComponentCollision;
+  UPROPERTY(EditAnywhere)
+  UCapsuleComponent* CapsuleComponentCollision;
 
-	UPROPERTY(VisibleAnywhere)
-		UCharacterMovementComponent* MovementComponent;
+  UPROPERTY(VisibleAnywhere)
+  UCharacterMovementComponent* MovementComponent;
 
-	UPROPERTY(BlueprintReadWrite)
-		AAIController* AICharacterController;
+  UPROPERTY(BlueprintReadWrite)
+  AAIController* AICharacterController;
 
-	float InitialSpeed = 0.0f;
+  float InitialSpeed = 0.0f;
 
-	UPROPERTY(VisibleAnywhere)
-		Rotations PieceRotation;
+  UPROPERTY(VisibleAnywhere)
+  Rotations PieceRotation;
 
-	UPROPERTY(VisibleAnywhere)
-		Pieces Pieces;
+  UPROPERTY(VisibleAnywhere)
+  Pieces Pieces;
 
-		UPROPERTY()
-		FMeleEnemyDeath MeleEnemyDeath;
 
-		UFUNCTION()
-		void EnemyDeath();
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  UStaticMeshComponent* StaticProjectile;
 
-		UFUNCTION()
-		void Reactivate();
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  UStaticMeshComponent* StaticProjectileElDeverda;
 
-		UFUNCTION()
-		void Deactivate();
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> YellowTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> CyamTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> GreenTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> RedTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> OrangeTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> BlueTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> PurpleTextures;
+
+  UPROPERTY()
+  UBillboardComponent* BillboardComponent;
+
+  UPROPERTY()
+  FMeleEnemyDeath MeleEnemyDeath;
+
+  UFUNCTION()
+  void EnemyDeath();
+
+  UFUNCTION()
+  void Reactivate();
+
+  UFUNCTION()
+  void Deactivate();
+
+  UFUNCTION()
+  void SelectPieceMesh();
+
 };
