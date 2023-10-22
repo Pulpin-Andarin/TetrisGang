@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "../Constantes.h"
 //#include <Actions/PawnAction_Move.h>
-#include "../Constantes.h"
+//#include "../Constantes.h"
 #include "MeleEnemy.generated.h"
 
 class UWalkToComponent;

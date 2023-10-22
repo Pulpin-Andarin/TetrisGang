@@ -170,7 +170,7 @@ bool ATetrisGangProjectile::CheckPieceAndRotation(Pieces p, Rotations R)
     }
     else if (R == Rotation)
     {
-      return true;
+      return true; 
     }
 
   }

@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "BrainComponent.h"
 #include <TetrisGang/Constantes.h>
+#include "Components/BillboardComponent.h"
 
 // Sets default values
 AAirEnemy::AAirEnemy()
@@ -25,6 +26,8 @@ void AAirEnemy::BeginPlay()
 
   //AirMesh = Cast<UStaticMeshComponent>(FindComponentByTag<UStaticMeshComponent>(TEXT("BoxMesh")));
   //BoxCollision = Cast<UBoxComponent>(FindComponentByTag<UBoxComponent>(FName(TEXT("BoxColl"))));
+  BillboardComponent = Cast<UBillboardComponent>(FindComponentByTag<UBillboardComponent>(FName(TEXT("billboardPiece"))));
+
 }
 
 // Called every frame
@@ -88,6 +91,8 @@ void AAirEnemy::Reactivate()
   Pieces = Constantes::GetRandomPiece();
 
   PieceRotation = Constantes::GetRandomRotation();
+
+  SelectPieceMesh();
 }
 
 void AAirEnemy::Deactivate()
@@ -113,5 +118,54 @@ void AAirEnemy::Deactivate()
   //ReturnToPool//
 
   //GetCharacterMovement()->GravityScale = 0.f;
+}
+
+
+void AAirEnemy::SelectPieceMesh()
+{
+  int position = 0;
+  switch (PieceRotation) {
+  case Rotations::Up:
+    position = 0;
+    break;
+  case Rotations::Right:
+    position = 1;
+    break;
+  case Rotations::Down:
+    position = 2;
+    break;
+  case Rotations::Left:
+    position = 3;
+    break;
+  }
+
+  switch (Pieces)
+  {
+  case Pieces::Yelow:
+    BillboardComponent->SetSprite(YellowTextures[position]);
+    break;
+  case Pieces::Cyan:
+    BillboardComponent->SetSprite(CyamTextures[position]);
+    break;
+  case Pieces::Green:
+    BillboardComponent->SetSprite(GreenTextures[position]);
+    break;
+  case Pieces::Red:
+    BillboardComponent->SetSprite(RedTextures[position]);
+    break;
+  case Pieces::Orange:
+    BillboardComponent->SetSprite(OrangeTextures[position]);
+    break;
+  case Pieces::Blue:
+    BillboardComponent->SetSprite(BlueTextures[position]);
+    break;
+  case Pieces::Purple:
+    BillboardComponent->SetSprite(PurpleTextures[position]);
+    break;
+  default:
+    break;
+  }
+
+  BillboardComponent->SetRelativeScale3D(FVector(0.1, 0.1, 0.1));
 }
 

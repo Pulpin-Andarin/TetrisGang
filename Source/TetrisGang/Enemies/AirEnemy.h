@@ -57,4 +57,31 @@ public:
 
   UPROPERTY(VisibleAnywhere)
   Pieces Pieces;
+
+  void SelectPieceMesh();
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> YellowTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> CyamTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> GreenTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> RedTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> OrangeTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> BlueTextures;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  TArray<UTexture2D*> PurpleTextures;
+
+  UPROPERTY()
+  UBillboardComponent* BillboardComponent;
+
 };
