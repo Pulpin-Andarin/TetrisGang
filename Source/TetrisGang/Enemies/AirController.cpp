@@ -7,8 +7,8 @@
 
 void AAirController::OnPossess(APawn* InPawn)
 {
-  Super::OnPossess(InPawn);
-  AAirEnemy* AirEnemy = Cast<AAirEnemy>(InPawn);
-  AirEnemy->AIController = this;
+  //Super::OnPossess(InPawn);
+  //AAirEnemy* AirEnemy = Cast<AAirEnemy>(InPawn);
+  //AirEnemy->AIController = this;
   //AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(InPawn);
 }

@@ -38,16 +38,16 @@ void ASpawn::SpawnEnemy()
   if (ActorAir)
   {
     AAirEnemy* AirEnemy = Cast<AAirEnemy>(ActorAir);
-    AirEnemy->Reactivate();
     AirEnemy->SetActorLocation(SpawnLocation);
+    AirEnemy->Reactivate();
   }
 
   AActor* ActorMele = TetrisGameMode->Pool->GetNextActor(AMeleEnemy::StaticClass());
   if (ActorMele)
   {
     AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(ActorMele);
-    MeleEnemy->Reactivate();
     MeleEnemy->SetActorLocation(SpawnLocation);
+    MeleEnemy->Reactivate();
   }
 }
 

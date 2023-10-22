@@ -70,6 +70,23 @@ public:
   //Function to obtain the first available actor in the pool of the specified class.
   AActor* GetNextActor(TSubclassOf<AActor> classToSpawn);
 
+  /** Projectile class to spawn */
+  UPROPERTY(EditDefaultsOnly)
+  TSubclassOf<class AMeleEnemy> MeleEnemyClass;  
+  
+  /** Projectile class to spawn */
+  UPROPERTY(EditDefaultsOnly)
+  TSubclassOf<class AAIController> MeleEnemyControllerClass;  
+  /** Projectile class to spawn */
+  UPROPERTY(EditDefaultsOnly)
+  TSubclassOf<class AAIController> AirEnemyControllerClass;
+
+  UPROPERTY(EditDefaultsOnly)
+  TSubclassOf<class ATetrisGangProjectile> TetrisGangProjectileClass;
+
+  UPROPERTY(EditDefaultsOnly)
+  TSubclassOf<class AAirEnemy> AirEnemyClass;
+
   //Function to obtain all the actors of the specified class.
   //TArray<AActor*> GetAllActors(TSubclassOf<AActor> classToSpawn);
 

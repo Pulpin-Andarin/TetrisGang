@@ -35,6 +35,7 @@ public:
 
   APooledPork* Pool;
 
+  virtual void BeginPlay() override;
 
   void Initialize();
 };

@@ -20,10 +20,10 @@ void AAirEnemy::BeginPlay()
   Super::BeginPlay();
   ATetrisGangGameMode* GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
   AirEnemyDeath.AddDynamic(GameMode, &ATetrisGangGameMode::UpdateEnemyCounter);
-  AIController = Cast<AAIController>(GetController());
+  //AIController = Cast<AAIController>(GetController());
 
-  AirMesh = Cast<UStaticMeshComponent>(FindComponentByTag<UStaticMeshComponent>(TEXT("BoxMesh")));
-  BoxCollision = Cast<UBoxComponent>(FindComponentByTag<UBoxComponent>(FName(TEXT("BoxColl"))));
+  //AirMesh = Cast<UStaticMeshComponent>(FindComponentByTag<UStaticMeshComponent>(TEXT("BoxMesh")));
+  //BoxCollision = Cast<UBoxComponent>(FindComponentByTag<UBoxComponent>(FName(TEXT("BoxColl"))));
 }
 
 // Called every frame
@@ -49,12 +49,12 @@ void AAirEnemy::EnemyDeath()
 void AAirEnemy::Reactivate()
 {
 
-  SetActorTickEnabled(true);
+  //SetActorTickEnabled(true);
 
-  //if (GetController() == nullptr)
-  //{
-  //  AIController->Possess(this);
-  //}
+  if (GetController() == nullptr)
+  {
+    AIController->Possess(this);
+  }
 
 
   //if (IsValid(MovementComponent))
@@ -76,12 +76,12 @@ void AAirEnemy::Reactivate()
   }
 
 
-  //if (IsValid(AIController))
-  //{
-  //  AIController->Reset();
-  //  AIController->GetBrainComponent()->Activate();
-  //  AIController->GetBrainComponent()->RestartLogic();
-  //}
+  if (IsValid(AIController))
+  {
+    AIController->Reset();
+    AIController->GetBrainComponent()->Activate();
+    AIController->GetBrainComponent()->RestartLogic();
+  }
 
   //GetCharacterMovement()->GravityScale = 1.f;
 
@@ -90,24 +90,25 @@ void AAirEnemy::Reactivate()
 void AAirEnemy::Deactivate()
 {
   SetActorTickEnabled(false);
-  /*if (IsValid(GetMesh()))
+  if (IsValid(AirMesh))
   {
-    GetMesh()->ResetAnimInstanceDynamics(ETeleportType::TeleportPhysics);
-    GetMesh()->SetVisibility(false);
-    GetMesh()->Deactivate();
-  }*/
+    //AirMesh->ResetAnimInstanceDynamics(ETeleportType::TeleportPhysics);
+    AirMesh->SetVisibility(false);
+    AirMesh->Deactivate();
+  }
 
- /* if (IsValid(GetController()))
+  if (IsValid(AIController))
   {
     if (GetController() != nullptr)
     {
-      GetController()->GetBrainComponent()->StopLogic(FString("Go to pool"));
-      GetController()->GetBrainComponent()->Deactivate();
-      GetController()->UnPossess();
+      AIController->GetBrainComponent()->StopLogic(FString("Go to pool"));
+      AIController->GetBrainComponent()->Deactivate();
+      AIController->UnPossess();
     }
-  }*/
+  }
+
   //ReturnToPool//
-  // 
+
   //GetCharacterMovement()->GravityScale = 0.f;
 }
 
