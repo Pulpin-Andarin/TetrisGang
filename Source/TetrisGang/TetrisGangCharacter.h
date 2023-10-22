@@ -71,7 +71,7 @@ public:
   UFUNCTION(BlueprintCallable)
   void ReceiveDamage();
 
-  UPROPERTY(EditAnywhere, Category = Health)
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
   int Health = 3;
 
   UPROPERTY(BlueprintAssignable)
