@@ -7,12 +7,14 @@
 #include "AirController.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class TETRISGANG_API AAirController : public AAIController
 {
-	GENERATED_BODY()
+  GENERATED_BODY()
 
-	//bool ShouldPostponePathUpdates() const override;
+  //bool ShouldPostponePathUpdates() const override;
+
+  void OnPossess(APawn* InPawn) override;
 };

@@ -9,7 +9,6 @@
 
 Rotations Constantes::GetRandomRotation()
 {
-
 	return Rotations(rand() % 4);
 }
 

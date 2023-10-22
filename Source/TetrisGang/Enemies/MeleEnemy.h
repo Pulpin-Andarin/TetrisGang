@@ -52,7 +52,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UCharacterMovementComponent* MovementComponent;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 		AAIController* AICharacterController;
 
 	float InitialSpeed = 0.0f;

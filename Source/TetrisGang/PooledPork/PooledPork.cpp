@@ -45,7 +45,7 @@ void APooledPork::InitializePool()
     AirEnemies.Add(AM);
   }
 
-  //PoolCreated.Broadcast();
+  PoolCreated.Broadcast();
 }
 
 // Called when the game starts or when spawned

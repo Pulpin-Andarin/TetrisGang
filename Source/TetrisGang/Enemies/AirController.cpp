@@ -2,4 +2,13 @@
 
 
 #include "AirController.h"
+#include "AirEnemy.h"
+#include "MeleEnemy.h"
 
+void AAirController::OnPossess(APawn* InPawn)
+{
+  Super::OnPossess(InPawn);
+  AAirEnemy* AirEnemy = Cast<AAirEnemy>(InPawn);
+  AirEnemy->AIController = this;
+  //AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(InPawn);
+}
