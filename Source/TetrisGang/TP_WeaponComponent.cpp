@@ -190,15 +190,40 @@ void UTP_WeaponComponent::RotateBulletLeft()
   case Rotations::Up:
     if (ActualPiece == Pieces::Yelow)
     {
-        ActualRotation = Rotations::Down;
+        ActualRotation = Rotations::Left;
         StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 0.0));
     }
     else {
         ActualRotation = Rotations::Left;
-        StaticProjectile->SetRelativeRotation(FRotator(-90.0, 200.0, 90.0));
+        StaticProjectile->SetRelativeRotation(FRotator(90.0, 200.0, 90.0));
     }
     UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: left"));
     break;
+  case Rotations::Right:
+      if (ActualPiece == Pieces::Yelow) {
+          ActualRotation = Rotations::Up;
+          StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
+      }
+      else
+      {
+          ActualRotation = Rotations::Up;
+          StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
+      }
+      UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Up"));
+      break;
+  case Rotations::Down:
+      if (ActualPiece == Pieces::Yelow)
+      {
+          ActualRotation = Rotations::Right;
+          StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
+      }
+      else
+      {
+          ActualRotation = Rotations::Right;
+          StaticProjectile->SetRelativeRotation(FRotator(-90.0, 200.0, 90.0));
+      }
+      UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Right"));
+      break;
   case Rotations::Left:
     if (ActualPiece == Pieces::Yelow)
     {
@@ -212,31 +237,8 @@ void UTP_WeaponComponent::RotateBulletLeft()
     }
     UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Down"));
     break;
-  case Rotations::Down:
-    if (ActualPiece == Pieces::Yelow)
-    {
-        ActualRotation = Rotations::Up;
-        StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    else
-    {
-        ActualRotation = Rotations::Right;
-        StaticProjectile->SetRelativeRotation(FRotator(90.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Right"));
-    break;
-  case Rotations::Right:
-    if (ActualPiece == Pieces::Yelow) {
-        ActualRotation = Rotations::Up;
-        StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    else
-    {
-        ActualRotation = Rotations::Up;
-        StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Up"));
-    break;
+
+
   }
 }
 
@@ -248,13 +250,13 @@ void UTP_WeaponComponent::RotateBulletRight()
   case Rotations::Up:
     if (ActualPiece == Pieces::Yelow)
     {
-        ActualRotation = Rotations::Down;
+        ActualRotation = Rotations::Right;
         StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 0.0));
     }
     else
     {
         ActualRotation = Rotations::Right;
-        StaticProjectile->SetRelativeRotation(FRotator(90.0, 200.0, 90.0));
+        StaticProjectile->SetRelativeRotation(FRotator(-90.0, 200.0, 90.0));
     }
     UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Right"));
     break;
@@ -274,13 +276,13 @@ void UTP_WeaponComponent::RotateBulletRight()
   case Rotations::Down:
     if (ActualPiece == Pieces::Yelow)
     {
-        ActualRotation = Rotations::Up;
+        ActualRotation = Rotations::Left;
         StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
     }
     else
     {
         ActualRotation = Rotations::Left;
-        StaticProjectile->SetRelativeRotation(FRotator(-90.0, 200.0, 90.0));
+        StaticProjectile->SetRelativeRotation(FRotator(90.0, 200.0, 90.0));
     }
     UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: left"));
     break;

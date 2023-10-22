@@ -166,18 +166,16 @@ void AMeleEnemy::SelectPieceMesh()
   case Rotations::Up:
     position = 0;
     break;
-  case Rotations::Left:
+  case Rotations::Right:
     position = 1;
     break;
   case Rotations::Down:
     position = 2;
     break;
-  case Rotations::Right:
+  case Rotations::Left:
     position = 3;
     break;
   }
-
-  StaticProjectileElDeverda->SetRelativeScale3D(FVector(2.5f, 2.5f, 2.5f));
 
   switch (Pieces)
   {
@@ -205,5 +203,7 @@ void AMeleEnemy::SelectPieceMesh()
   default:
     break;
   }
+
+  BillboardComponent->SetRelativeScale3D(FVector(0.1, 0.1, 0.1));
 }
 
