@@ -21,7 +21,7 @@ void AMeleEnemy::BeginPlay()
 {
   Super::BeginPlay();
 
-  //AICharacterController = Cast<AAIController>(GetController());
+  AICharacterController = Cast<AAIController>(GetController());
 
   CapsuleComponentCollision = Cast<UCapsuleComponent>(GetComponentByClass(UCapsuleComponent::StaticClass()));
 
@@ -39,7 +39,7 @@ void AMeleEnemy::BeginPlay()
 
   ATetrisGangGameMode* GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
   MeleEnemyDeath.AddDynamic(GameMode, &ATetrisGangGameMode::UpdateEnemyCounter);
-  AICharacterController = Cast<AAIController>(GetController());
+
 
 }
 
@@ -59,7 +59,6 @@ void AMeleEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void AMeleEnemy::Reactivate()
 {
-
   SetActorTickEnabled(true);
 
   if (GetController() == nullptr)
@@ -67,7 +66,6 @@ void AMeleEnemy::Reactivate()
     AICharacterController->Possess(this);
   }
 
-  AICharacterController->Reset();
 
   //if (IsValid(MovementComponent))
   //{
@@ -90,14 +88,18 @@ void AMeleEnemy::Reactivate()
 
   if (IsValid(AICharacterController))
   {
-
+    AICharacterController->Reset();
     AICharacterController->GetBrainComponent()->Activate();
     AICharacterController->GetBrainComponent()->RestartLogic();
   }
 
   GetCharacterMovement()->GravityScale = 1.f;
 
+  Pieces = Constantes::GetRandomPiece();
+
+  PieceRotation = Constantes::GetRandomRotation();
 }
+
 void AMeleEnemy::Deactivate()
 {
   SetActorTickEnabled(false);
@@ -110,7 +112,7 @@ void AMeleEnemy::Deactivate()
 
   if (IsValid(AICharacterController))
   {
-    if (AICharacterController != nullptr)
+    if (GetController() != nullptr)
     {
       AICharacterController->GetBrainComponent()->StopLogic(FString("Go to pool"));
       AICharacterController->GetBrainComponent()->Deactivate();
@@ -120,6 +122,7 @@ void AMeleEnemy::Deactivate()
 
   GetCharacterMovement()->GravityScale = 0.f;
   //ReturnToPool//
+  //SetActorLocation();
 }
 //
 //void AMeleEnemy::Activate()

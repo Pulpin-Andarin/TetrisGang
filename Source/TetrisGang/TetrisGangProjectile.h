@@ -11,6 +11,7 @@ class USphereComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UStaticMesh;
+class ATetrisGangGameMode;
 
 UCLASS(config = Game)
 class ATetrisGangProjectile : public AActor
@@ -27,6 +28,8 @@ class ATetrisGangProjectile : public AActor
 
 
   UStaticMeshComponent* PieceMesh;
+
+  ATetrisGangGameMode* GameMode;
 
 protected:
   virtual void BeginPlay();

@@ -6,6 +6,7 @@
 #include "../Enemies/AirEnemy.h"
 #include "../Enemies/MeleEnemy.h"
 #include "../Enemies/Projectiles/EnemyProjectile.h"
+#include "../Enemies/AirController.h"
 #include "../TetrisGangProjectile.h"
 
 // Sets default values
@@ -26,26 +27,30 @@ void APooledPork::InitializePool()
   // Create Pool
   for (int i = 0; i < NumMeleEnemies; i++)
   {
-    AMeleEnemy* AM = GetWorld()->SpawnActor<AMeleEnemy>(AMeleEnemy::StaticClass(), PoolLocation, FRotator().ZeroRotator, SpawnInfo);
-    AM->Deactivate();
+    AMeleEnemy* AM = GetWorld()->SpawnActor<AMeleEnemy>(MeleEnemyClass, PoolLocation, FRotator().ZeroRotator, SpawnInfo);
+    AAIController* Aic = GetWorld()->SpawnActor<AAIController>(MeleEnemyControllerClass, PoolLocation, FRotator().ZeroRotator, SpawnInfo);
+    AM->AICharacterController = Aic;
     MeleEnemies.Add(AM);
   }
   // Create Pool
-  for (int i=0; i < NumPiecesProjectiles; i++)
+  for (int i = 0; i < NumPiecesProjectiles; i++)
   {
-    ATetrisGangProjectile* AM = GetWorld()->SpawnActor<ATetrisGangProjectile>(ATetrisGangProjectile::StaticClass(), PoolLocation, FRotator().ZeroRotator, SpawnInfo);
+    ATetrisGangProjectile* AM = GetWorld()->SpawnActor<ATetrisGangProjectile>(TetrisGangProjectileClass, PoolLocation, FRotator().ZeroRotator, SpawnInfo);
     AM->Deactivate();
     PiecesProjectiles.Add(AM);
   }
   // Create Pool
   for (int i = 0; i < NumAirEnemies; i++)
   {
-    AAirEnemy* AM = GetWorld()->SpawnActor<AAirEnemy>(AAirEnemy::StaticClass(), PoolLocation, FRotator().ZeroRotator, SpawnInfo);
+    AAirEnemy* AM = GetWorld()->SpawnActor<AAirEnemy>(AirEnemyClass, PoolLocation, FRotator().ZeroRotator, SpawnInfo);
+    AAIController* Aic = GetWorld()->SpawnActor<AAIController>(AirEnemyControllerClass, PoolLocation, FRotator().ZeroRotator, SpawnInfo);
+    AM->AIController = Aic;
+
     AM->Deactivate();
     AirEnemies.Add(AM);
   }
 
-  //PoolCreated.Broadcast();
+  PoolCreated.Broadcast();
 }
 
 // Called when the game starts or when spawned
@@ -77,7 +82,7 @@ AActor* APooledPork::GetNextActor(TSubclassOf<AActor> ClassToSpawn)
   }
   else if (ClassToSpawn == AMeleEnemy::StaticClass())
   {
-    if (PiecesProjectiles.Num() > 0)
+    if (MeleEnemies.Num() > 0)
     {
       AMeleEnemy* MeleEnemy = MeleEnemies.Pop();
       MeleEnemy->Reactivate();

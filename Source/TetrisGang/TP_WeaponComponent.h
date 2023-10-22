@@ -83,10 +83,13 @@ private:
   /** The Character holding this weapon*/
   ATetrisGangCharacter* Character;
 
+  UPROPERTY(VisibleAnyWhere)
   Rotations ActualRotation = Rotations::Up;
 
+  UPROPERTY(VisibleAnyWhere)
   Pieces ActualPiece = Pieces::Blue;
 
+  UPROPERTY(VisibleAnyWhere)
   UStaticMesh* ActualMesh;
 
 

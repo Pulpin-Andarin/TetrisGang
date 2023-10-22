@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include <Components/BoxComponent.h>
+#include "../Constantes.h"
 #include "AirEnemy.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAirEnemyDeath);
@@ -45,9 +46,15 @@ public:
   UFUNCTION()
   void Deactivate();
 
-  UPROPERTY()
+  UPROPERTY(EditAnyWhere, BlueprintReadWrite)
   UBoxComponent* BoxCollision;
 
-  UPROPERTY()
+  UPROPERTY(EditAnyWhere, BlueprintReadWrite)
   UStaticMeshComponent* AirMesh;
+
+  UPROPERTY(VisibleAnywhere)
+  Rotations PieceRotation;
+
+  UPROPERTY(VisibleAnywhere)
+  Pieces Pieces;
 };

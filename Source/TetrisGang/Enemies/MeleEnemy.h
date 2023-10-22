@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "../Constantes.h"
 //#include <Actions/PawnAction_Move.h>
+#include "../Constantes.h"
 #include "MeleEnemy.generated.h"
 
 class UWalkToComponent;
@@ -52,13 +53,13 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UCharacterMovementComponent* MovementComponent;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 		AAIController* AICharacterController;
 
 	float InitialSpeed = 0.0f;
 
 	UPROPERTY(VisibleAnywhere)
-		Rotations rotation;
+		Rotations PieceRotation;
 
 	UPROPERTY(VisibleAnywhere)
 		Pieces Pieces;

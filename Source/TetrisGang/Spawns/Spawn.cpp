@@ -2,6 +2,10 @@
 
 
 #include "Spawn.h"
+#include "../TetrisGangGameMode.h"
+#include "../PooledPork/PooledPork.h"
+#include "../Enemies/AirEnemy.h"
+#include "../Enemies/MeleEnemy.h"
 
 // Sets default values
 ASpawn::ASpawn()
@@ -16,12 +20,9 @@ void ASpawn::BeginPlay()
 {
   Super::BeginPlay();
 
-  GetWorld()->GetTimerManager().SetTimer(
-    FuzeTimerHandle, // handle to cancel timer at a later time
-    this, // the owning object
-    &ASpawn::SpawnEnemy, // function to call on elapsed
-    CooldownBetweenSpawns, // float delay until elapsed
-    true, 0.2f); // looping?
+  TetrisGameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
+
+
 }
 
 // Called every frame
@@ -33,6 +34,31 @@ void ASpawn::Tick(float DeltaTime)
 
 void ASpawn::SpawnEnemy()
 {
-  // spawn
-  // GetEnemy from pool
+  AActor* ActorAir = TetrisGameMode->Pool->GetNextActor(AAirEnemy::StaticClass());
+  if (ActorAir)
+  {
+    AAirEnemy* AirEnemy = Cast<AAirEnemy>(ActorAir);
+    AirEnemy->SetActorLocation(SpawnLocation);
+    AirEnemy->Reactivate();
+  }
+
+  AActor* ActorMele = TetrisGameMode->Pool->GetNextActor(AMeleEnemy::StaticClass());
+  if (ActorMele)
+  {
+    AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(ActorMele);
+    MeleEnemy->SetActorLocation(SpawnLocation);
+    MeleEnemy->Reactivate();
+  }
+}
+
+void ASpawn::Initialize() {
+
+  SpawnLocation = GetActorLocation();
+  GetWorld()->GetTimerManager().SetTimer(
+    FuzeTimerHandle, // handle to cancel timer at a later time
+    this, // the owning object
+    &ASpawn::SpawnEnemy, // function to call on elapsed
+    CooldownBetweenSpawns, // float delay until elapsed
+    true, 5.f); // looping?
+
 }

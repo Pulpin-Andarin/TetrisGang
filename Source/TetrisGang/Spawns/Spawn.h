@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Spawn.generated.h"
 
+class ATetrisGangGameMode;
 UCLASS()
 class TETRISGANG_API ASpawn : public AActor
 {
@@ -24,6 +25,7 @@ public:
   UFUNCTION(BlueprintCallable)
   void SpawnEnemy();
 
+  FVector SpawnLocation;
   // Called every frame
   virtual void Tick(float DeltaTime) override;
 
@@ -34,4 +36,9 @@ public:
   /* Handle to manage the timer */
   FTimerHandle FuzeTimerHandle;
 
+  UFUNCTION()
+  void Initialize();
+
+
+  ATetrisGangGameMode* TetrisGameMode;
 };
