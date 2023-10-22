@@ -63,5 +63,7 @@ public:
 
   UFUNCTION()
   void Deactivate();
+
+  bool CheckPieceAndRotation(Pieces p, Rotations R);
 };
 
