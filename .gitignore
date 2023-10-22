@@ -17,7 +17,7 @@
 
 ipch/*
 
-
+enc_temp_folder/*
 
 # Ignore Unix backup files
 *~
