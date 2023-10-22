@@ -36,6 +36,11 @@ void ATetrisGangGameMode::UpdateLevel()
 
 }
 
+void ATetrisGangGameMode::BeginPlay()
+{
+  Initialize();
+}
+
 void ATetrisGangGameMode::Initialize()
 {
   Pool = Cast<APooledPork>(UGameplayStatics::GetActorOfClass(GetWorld(), APooledPork::StaticClass()));

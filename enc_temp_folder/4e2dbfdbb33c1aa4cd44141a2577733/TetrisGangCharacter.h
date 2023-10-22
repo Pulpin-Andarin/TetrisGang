@@ -17,8 +17,6 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeath);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerHitted);
-
 UCLASS(config = Game)
 class ATetrisGangCharacter : public ACharacter
 {
@@ -76,9 +74,6 @@ public:
 
   UPROPERTY(BlueprintAssignable)
   FPlayerDeath PlayerDeath;
-
-  UPROPERTY(BlueprintAssignable)
-  FPlayerDeath PlayerHitted;
 
 protected:
   /** Called for movement input */
