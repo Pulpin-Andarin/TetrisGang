@@ -41,6 +41,8 @@ public:
 
   void Initialize();
 
+
+  UPROPERTY(BlueprintAssignable)
   FLevelUp LevelUpEvent;
 };
 

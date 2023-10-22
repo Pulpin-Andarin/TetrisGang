@@ -121,48 +121,59 @@ void UTP_WeaponComponent::AttachWeapon(ATetrisGangCharacter* TargetCharacter)
   StaticProjectile->SetRelativeLocation(capusleComponent->GetRelativeLocation());
   StaticProjectile->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
 
-  CreateRandomProjectile();
+
+  UpdateProjectile();
 }
 
 void UTP_WeaponComponent::CreateRandomProjectile()
 {
-  ActualPiece = Constantes::GetRandomPiece();
+  ActualPiece = NextPiece;
   ActualRotation = Rotations::Up;
-  StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-  StaticProjectile->SetRelativeScale3D(FVector(2.5f, 2.5f, 2.5f));
+  NextPiece = Constantes::GetRandomPiece();
+ 
+  UpdateProjectile();
 
-  switch (ActualPiece)
-  {
-  case Pieces::Yelow:
-    ActualMesh = AvailablePiecesMeshes[0];
-    break;
-  case Pieces::Cyan:
-    ActualMesh = AvailablePiecesMeshes[1];
-    break;
-  case Pieces::Green:
-    ActualMesh = AvailablePiecesMeshes[2];
-    break;
-  case Pieces::Red:
-    ActualMesh = AvailablePiecesMeshes[3];
-    break;
-  case Pieces::Orange:
-    ActualMesh = AvailablePiecesMeshes[4];
-    break;
-  case Pieces::Blue:
-    ActualMesh = AvailablePiecesMeshes[5];
-    break;
-  case Pieces::Purple:
-    ActualMesh = AvailablePiecesMeshes[6];
-    break;
-  default:
-    break;
-  }
-  //FString  s = ActualMesh->GetFName();
-  //UE_LOG(LogTemplateCharacter, Error, TEXT("%s", ));
-  if (!IsValid(ActualMesh) || ActualMesh == nullptr) {
-      UE_LOG(LogTemplateCharacter, Warning, TEXT("Actual Mesh is null"));
-  }
-  StaticProjectile->SetStaticMesh(ActualMesh);
+  ShootEvent.Broadcast();
+}
+
+
+void UTP_WeaponComponent::UpdateProjectile() 
+{
+    StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
+    StaticProjectile->SetRelativeScale3D(FVector(2.5f, 2.5f, 2.5f));
+
+    switch (ActualPiece)
+    {
+    case Pieces::Yelow:
+        ActualMesh = AvailablePiecesMeshes[0];
+        break;
+    case Pieces::Cyan:
+        ActualMesh = AvailablePiecesMeshes[1];
+        break;
+    case Pieces::Green:
+        ActualMesh = AvailablePiecesMeshes[2];
+        break;
+    case Pieces::Red:
+        ActualMesh = AvailablePiecesMeshes[3];
+        break;
+    case Pieces::Orange:
+        ActualMesh = AvailablePiecesMeshes[4];
+        break;
+    case Pieces::Blue:
+        ActualMesh = AvailablePiecesMeshes[5];
+        break;
+    case Pieces::Purple:
+        ActualMesh = AvailablePiecesMeshes[6];
+        break;
+    default:
+        break;
+    }
+    //FString  s = ActualMesh->GetFName();
+    //UE_LOG(LogTemplateCharacter, Error, TEXT("%s", ));
+    if (!IsValid(ActualMesh) || ActualMesh == nullptr) {
+        UE_LOG(LogTemplateCharacter, Warning, TEXT("Actual Mesh is null"));
+    }
+    StaticProjectile->SetStaticMesh(ActualMesh);
 }
 
 void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
