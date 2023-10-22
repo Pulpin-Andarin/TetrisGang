@@ -45,5 +45,6 @@ public:
   UFUNCTION()
   void UpdateCooldown();
 
+  UPROPERTY(EditAnywhere)
   TArray<float> Cooldowns;
 };
