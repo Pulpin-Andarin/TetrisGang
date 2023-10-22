@@ -72,7 +72,7 @@ public:
   void ReceiveDamage();
 
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
-  int Health = 3;
+  int Health = 7;
 
   UPROPERTY(BlueprintAssignable)
   FPlayerDeath PlayerDeath;
