@@ -54,10 +54,8 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
     AAirEnemy* AirEnemy = Cast<AAirEnemy>(OtherActor);
     if (AirEnemy)
     {
-      bool bPieceAndRotation = CheckPieceAndRotation(AirEnemy->Pieces, AirEnemy->PieceRotation);
-      if (bPieceAndRotation)
+      if (AirEnemy->Pieces == Piece && AirEnemy->PieceRotation == Rotation)
       {
-
         GameMode->Pool->ReturnToPool(AirEnemy);
         Destroy();
       }
@@ -66,17 +64,16 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
       AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(OtherActor);
       if (MeleEnemy)
       {
-        bool bPieceAndRotation = CheckPieceAndRotation(MeleEnemy->Pieces, MeleEnemy->PieceRotation);
-        if (bPieceAndRotation)
+        if (MeleEnemy->Pieces == Piece && MeleEnemy->PieceRotation == Rotation)
         {
           GameMode->Pool->ReturnToPool(MeleEnemy);
           Destroy();
         }
       }
-      /* else {
+     /* else {
 
-         OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-       }*/
+        OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+      }*/
     }
 
     //Deactivate();
@@ -147,35 +144,6 @@ void ATetrisGangProjectile::Deactivate()
 
   // Return Pool
 
-}
-
-bool ATetrisGangProjectile::CheckPieceAndRotation(Pieces p, Rotations R)
-{
-  if (p == Piece)
-  {
-    if (p == Pieces::Red || p == Pieces::Green || p == Pieces::Cyan)
-    {
-      if ((R == Rotations::Left || R == Rotations::Right) && (Rotation == Rotations::Left || Rotation == Rotations::Right))
-      {
-        return true;
-      }
-      if ((R == Rotations::Up || R == Rotations::Down) && (Rotation == Rotations::Up || Rotation == Rotations::Down))
-      {
-        return true;
-      }
-    }
-    else if (p == Pieces::Yelow)
-    {
-      return true;
-    }
-    else if (R == Rotation)
-    {
-      return true;
-    }
-
-  }
-
-  return false;
 }
 
 void ATetrisGangProjectile::Reactivate()
