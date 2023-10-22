@@ -128,9 +128,10 @@ void UTP_WeaponComponent::AttachWeapon(ATetrisGangCharacter* TargetCharacter)
 void UTP_WeaponComponent::CreateRandomProjectile()
 {
   ActualPiece = NextPiece;
-  ActualRotation = Rotations::Up;
+  ActualRotation = NextRotation;
   NextPiece = Constantes::GetRandomPiece();
- 
+  NextRotation = Constantes::GetRandomRotation();
+
   UpdateProjectile();
 
   ShootEvent.Broadcast();

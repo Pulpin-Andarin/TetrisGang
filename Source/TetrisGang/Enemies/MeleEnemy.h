@@ -13,6 +13,7 @@ class UWalkToComponent;
 class UCapsuleComponent;
 class UCharacterMovementComponent;
 class AAIController;
+class UTexture2D;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMeleEnemyDeath);
 
@@ -66,7 +67,7 @@ public:
 
 
   UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  UStaticMeshComponent* StaticProjectile;
+  class UStaticMeshComponent* StaticProjectile;
 
   UPROPERTY(EditAnywhere, BlueprintReadWrite)
   UStaticMeshComponent* StaticProjectileElDeverda;
@@ -93,7 +94,7 @@ public:
   TArray<UTexture2D*> PurpleTextures;
 
   UPROPERTY()
-  UBillboardComponent* BillboardComponent;
+  class UBillboardComponent* BillboardComponent;
 
   UPROPERTY()
   FMeleEnemyDeath MeleEnemyDeath;
