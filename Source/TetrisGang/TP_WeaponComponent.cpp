@@ -14,7 +14,7 @@
 UTP_WeaponComponent::UTP_WeaponComponent()
 {
   // Default offset from the character location for projectiles to spawn
-  MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
+  MuzzleOffset = FVector(20.0f, 0.0f, 10.0f);
   StaticProjectile = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticProjectileComponent"));
 
 }
