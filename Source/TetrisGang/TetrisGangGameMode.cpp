@@ -19,7 +19,7 @@ ATetrisGangGameMode::ATetrisGangGameMode()
 void ATetrisGangGameMode::UpdateEnemyCounter()
 {
   CurrentEnemyDeaths++;
-
+  TotalPoints += 100;
   if (CurrentEnemyDeaths >= DeathsPerLevel)
   {
     CurrentEnemyDeaths = 0;
