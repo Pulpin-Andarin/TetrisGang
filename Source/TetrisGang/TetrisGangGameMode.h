@@ -26,7 +26,7 @@ public:
   UPROPERTY(EditAnywhere)
   int DeathsPerLevel = 10;
 
-  UPROPERTY(EditAnywhere)
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
   int TotalPoints = 0;
 
   UPROPERTY(EditAnywhere)
