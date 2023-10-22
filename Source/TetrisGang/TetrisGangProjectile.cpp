@@ -54,27 +54,29 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 
 void ATetrisGangProjectile::UpdateMesh(UStaticMesh* NewMesh)
 {
-  PieceMesh->SetStaticMesh(NewMesh);
+	PieceMesh->SetStaticMesh(NewMesh);
+	PieceMesh->SetRelativeScale3D(FVector(15.0, 15.0, 15.0));
 }
 
 void ATetrisGangProjectile::Rotate()
 {
-  switch (Rotation)
-  {
-  case Rotations::Up:
-    PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 0.0));
-    break;
-  case Rotations::Right:
-    PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 90.0));
-    break;
-  case Rotations::Down:
-    PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, 180.0));
-    break;
-  case Rotations::Left:
-    PieceMesh->SetRelativeRotation(FRotator(0.0, 0.0, -90.0));
-    break;
-  }
+	switch (Rotation)
+	{
+		case Rotations::Up:
+			PieceMesh->SetRelativeRotation(FRotator(0.0, 90.0, 90.0));
+			break;
+		case Rotations::Right:
+			PieceMesh->SetRelativeRotation(FRotator(90.0, 90.0, 90.0));
+			break;
+		case Rotations::Down:
+			PieceMesh->SetRelativeRotation(FRotator(180.0, 90.0, 90.0));
+			break;
+		case Rotations::Left:
+			PieceMesh->SetRelativeRotation(FRotator(-90.0, 90.0, 90.0));
+			break;
+	}
 }
+
 
 
 void ATetrisGangProjectile::Deactivate()
