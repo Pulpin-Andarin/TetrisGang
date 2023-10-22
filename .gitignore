@@ -1,4 +1,5 @@
 # Ignore project files in the root
+.idea
 *.sln
 !*/*.sln
 .vs
@@ -21,7 +22,7 @@ ipch/*
 # Ignore Unix backup files
 *~
 
-# Ignore Mac desktop services store files 
+# Ignore Mac desktop services store files
 .DS_Store
 
 # Ignore crash reports
