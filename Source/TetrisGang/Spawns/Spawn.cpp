@@ -22,7 +22,7 @@ void ASpawn::BeginPlay()
 
   TetrisGameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
 
-
+  TetrisGameMode->LevelUpEvent.AddDynamic(this, &ASpawn::UpdateCooldown);
 }
 
 // Called every frame
@@ -34,26 +34,36 @@ void ASpawn::Tick(float DeltaTime)
 
 void ASpawn::SpawnEnemy()
 {
-  AActor* ActorAir = TetrisGameMode->Pool->GetNextActor(AAirEnemy::StaticClass());
-  if (ActorAir)
-  {
-    AAirEnemy* AirEnemy = Cast<AAirEnemy>(ActorAir);
-    AirEnemy->SetActorLocation(SpawnLocation);
-    AirEnemy->Reactivate();
-  }
 
-  AActor* ActorMele = TetrisGameMode->Pool->GetNextActor(AMeleEnemy::StaticClass());
-  if (ActorMele)
+  int rand = FMath::RandRange(0, 1);
+  if (rand == 0)
   {
-    AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(ActorMele);
-    MeleEnemy->SetActorLocation(SpawnLocation);
-    MeleEnemy->Reactivate();
+
+    AActor* ActorAir = TetrisGameMode->Pool->GetNextActor(AAirEnemy::StaticClass());
+    if (ActorAir)
+    {
+      AAirEnemy* AirEnemy = Cast<AAirEnemy>(ActorAir);
+      AirEnemy->SetActorLocation(SpawnLocation);
+      AirEnemy->Reactivate();
+    }
+
+  }
+  else {
+
+    AActor* ActorMele = TetrisGameMode->Pool->GetNextActor(AMeleEnemy::StaticClass());
+    if (ActorMele)
+    {
+      AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(ActorMele);
+      MeleEnemy->SetActorLocation(SpawnLocation);
+      MeleEnemy->Reactivate();
+    }
   }
 }
 
 void ASpawn::Initialize() {
 
   SpawnLocation = GetActorLocation();
+  CooldownBetweenSpawns = Cooldowns[TetrisGameMode->CurrentLevel];
   GetWorld()->GetTimerManager().SetTimer(
     FuzeTimerHandle, // handle to cancel timer at a later time
     this, // the owning object
@@ -61,4 +71,10 @@ void ASpawn::Initialize() {
     CooldownBetweenSpawns, // float delay until elapsed
     true, 5.f); // looping?
 
+}
+
+void ASpawn::UpdateCooldown()
+{
+  GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+  Initialize();
 }

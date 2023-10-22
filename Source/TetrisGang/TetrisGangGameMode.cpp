@@ -32,8 +32,8 @@ void ATetrisGangGameMode::UpdateLevel()
   if (CurrentLevel < MaxLevel)
   {
     CurrentLevel++;
+    LevelUpEvent.Broadcast();
   }
-
 }
 
 void ATetrisGangGameMode::BeginPlay()

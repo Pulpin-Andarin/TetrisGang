@@ -41,4 +41,9 @@ public:
 
 
   ATetrisGangGameMode* TetrisGameMode;
+
+  UFUNCTION()
+  void UpdateCooldown();
+
+  TArray<float> Cooldowns;
 };

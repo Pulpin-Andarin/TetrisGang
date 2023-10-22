@@ -7,6 +7,8 @@
 #include "TetrisGangGameMode.generated.h"
 
 class APooledPork;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLevelUp);
 UCLASS(minimalapi)
 class ATetrisGangGameMode : public AGameModeBase
 {
@@ -16,7 +18,7 @@ public:
   ATetrisGangGameMode();
 
   UPROPERTY()
-  int CurrentLevel;
+  int CurrentLevel = 0;
 
   UPROPERTY(VisibleAnywhere)
   int CurrentEnemyDeaths = 0;
@@ -38,6 +40,8 @@ public:
   virtual void BeginPlay() override;
 
   void Initialize();
+
+  FLevelUp LevelUpEvent;
 };
 
 
