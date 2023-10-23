@@ -11,6 +11,9 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAirEnemyDeath);
 class AAIController;
 class UTexture2D;
+class UBillboardComponent;
+class UStaticMeshComponent;
+class UBoxComponent;
 
 UCLASS()
 class TETRISGANG_API AAirEnemy : public APawn
@@ -48,10 +51,10 @@ public:
   void Deactivate();
 
   UPROPERTY(EditAnyWhere, BlueprintReadWrite)
-  class UBoxComponent* BoxCollision;
+  UBoxComponent* BoxCollision;
 
   UPROPERTY(EditAnyWhere, BlueprintReadWrite)
-  class UStaticMeshComponent* AirMesh;
+  UStaticMeshComponent* AirMesh;
 
   UPROPERTY(VisibleAnywhere)
   Rotations PieceRotation;
@@ -83,6 +86,6 @@ public:
   TArray<UTexture2D*> PurpleTextures;
 
   UPROPERTY()
-  class UBillboardComponent* BillboardComponent;
+  UBillboardComponent* BillboardComponent;
 
 };

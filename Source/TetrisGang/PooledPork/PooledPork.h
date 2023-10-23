@@ -29,10 +29,6 @@ public:
   UPROPERTY(VisibleAnyWhere, Category = "Pool")
   FVector PoolLocation;
 
-  //UPROPERTY(VisibleAnyWhere, Category = "Pool")
-  ////Multimap that stores all the spawns required, classified by class.
-  //TMultiMap<TSubclassOf<AActor>, AActor*> Spawns;
-
   //Multimap that stores the index of each actor in the pool. Note: Not neccesary at the moment
   /*TMultiMap<TSubclassOf<AActor>, int32> IndexesSpawnedActors;*/
   FPoolCreated PoolCreated;
@@ -49,9 +45,9 @@ public:
   int NumAirEnemies = 10;
   int NumMeleEnemies = 10;
   int NumPiecesProjectiles = 14;
+
   //UPROPERTY()
   //TArray<AEnemyProjectile*> EnemyProjectiles;
-
 
   UFUNCTION()
   void InitializePool();

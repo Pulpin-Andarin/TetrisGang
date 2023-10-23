@@ -79,6 +79,7 @@ void ATetrisGangCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
     // Looking
     EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATetrisGangCharacter::Look);
+    EnhancedInputComponent->BindAction(GodModeAction, ETriggerEvent::Triggered, this, &ATetrisGangCharacter::ActivateGodMode);
   }
   else
   {
@@ -113,6 +114,11 @@ void ATetrisGangCharacter::Look(const FInputActionValue& Value)
   }
 }
 
+void ATetrisGangCharacter::ActivateGodMode(const FInputActionValue& Value)
+{
+  bGodMode = !bGodMode;
+}
+
 
 void ATetrisGangCharacter::SetHasRifle(bool bNewHasRifle)
 {
@@ -126,12 +132,13 @@ bool ATetrisGangCharacter::GetHasRifle()
 
 void ATetrisGangCharacter::ReceiveDamage()
 {
-  if (Health-- == 0)
+  if (!bGodMode)
   {
-    PlayerDeath.Broadcast();
+    if (Health-- == 0)
+    {
+      PlayerDeath.Broadcast();
+    }
+
+    PlayerHitted.Broadcast();
   }
-
-  PlayerHitted.Broadcast();
-
-  
 }

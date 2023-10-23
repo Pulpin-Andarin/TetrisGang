@@ -56,6 +56,10 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
   class UInputAction* LookAction;
 
+  /** God Mode Action */
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+  class UInputAction* GodModeAction;
+
   /** Bool for AnimBP to switch to another animation set */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
   bool bHasRifle;
@@ -87,6 +91,9 @@ protected:
   /** Called for looking input */
   void Look(const FInputActionValue& Value);
 
+  /** Called for activate god mode input*/
+  void ActivateGodMode(const FInputActionValue& Value);
+
 protected:
   // APawn interface
   virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
@@ -97,6 +104,10 @@ public:
   USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
   /** Returns FirstPersonCameraComponent subobject **/
   UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+  
+  UPROPERTY(EditAnywhere)
+  bool bGodMode = false;
 
 };
+
 
