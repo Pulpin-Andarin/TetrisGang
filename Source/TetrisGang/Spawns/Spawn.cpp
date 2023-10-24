@@ -2,10 +2,11 @@
 
 
 #include "Spawn.h"
-#include "../TetrisGangGameMode.h"
+#include "../Managers/TetrisGangGameMode.h"
 #include "../PooledPork/PooledPork.h"
-#include "../Enemies/AirEnemy.h"
-#include "../Enemies/MeleEnemy.h"
+#include <TetrisGang/Enemies/MeleEnemy/MeleEnemy.h>
+#include <TetrisGang/Enemies/AirEnemy/AirEnemy.h>
+
 
 // Sets default values
 ASpawn::ASpawn()

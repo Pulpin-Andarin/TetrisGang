@@ -3,11 +3,11 @@
 
 #include "PooledPork.h"
 #include "Kismet/GameplayStatics.h"
-#include "../Enemies/AirEnemy.h"
-#include "../Enemies/MeleEnemy.h"
-#include "../Enemies/Projectiles/EnemyProjectile.h"
-#include "../Enemies/AirController.h"
-#include "../TetrisGangProjectile.h"
+#include <TetrisGang/Enemies/MeleEnemy/MeleEnemy.h>
+#include <TetrisGang/Enemies/AirEnemy/AirEnemy.h>
+#include <TetrisGang/Enemies/Projectiles/EnemyProjectile.h>
+#include <TetrisGang/Enemies/AirEnemy/AirController.h>
+#include "../Weapon/Projectile/TetrisGangProjectile.h"
 
 // Sets default values
 APooledPork::APooledPork()
