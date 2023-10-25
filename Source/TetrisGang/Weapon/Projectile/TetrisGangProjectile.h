@@ -7,11 +7,14 @@
 #include "../../Utils/Constantes.h"
 #include "TetrisGangProjectile.generated.h"
 
+
 class USphereComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UStaticMesh;
 class ATetrisGangGameMode;
+class ATetrisPiece;
+//class UTetrisPiece;
 
 
 UCLASS(config = Game)
@@ -19,17 +22,22 @@ class ATetrisGangProjectile : public AActor
 {
   GENERATED_BODY()
 
-  /** Sphere collision component */
-  UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
-  USphereComponent* CollisionComp;
+public:
+
 
   /** Projectile movement component */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
   UProjectileMovementComponent* ProjectileMovement;
 
-  UStaticMeshComponent* PieceMesh;
-
+  UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
   ATetrisGangGameMode* GameMode;
+
+  UPROPERTY(EditAnywhere, BlueprintReadwrite)
+  ATetrisPiece* TetrisPieceChild;
+
+  UPROPERTY(EditAnywhere, BlueprintReadwrite)
+  UChildActorComponent* ChildActor;
+
 
 protected:
   virtual void BeginPlay();
@@ -41,23 +49,8 @@ public:
   UFUNCTION()
   void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-  /** Returns CollisionComp subobject **/
-  USphereComponent* GetCollisionComp() const { return CollisionComp; }
-
   /** Returns ProjectileMovement subobject **/
   UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
-
-  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Rotation)
-  Rotations Rotation;
-
-  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Type)
-  Pieces Piece;
-
-  UFUNCTION(BlueprintCallable)
-  void Rotate();
-
-  UFUNCTION()
-  void UpdateMesh(UStaticMesh* NewMesh);
 
   UFUNCTION()
   void Reactivate();
@@ -66,6 +59,6 @@ public:
   void Deactivate();
 
   UFUNCTION()
-  bool CheckPieceAndRotation(Pieces p, Rotations R);
+  bool CheckPieceAndRotation(TetrisPieceColor p, TetrisPieceRotation R);
 };
 

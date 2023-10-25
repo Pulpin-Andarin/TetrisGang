@@ -8,7 +8,9 @@
 
 class APooledPork;
 
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLevelUp);
+
 UCLASS(minimalapi)
 class ATetrisGangGameMode : public AGameModeBase
 {
@@ -16,6 +18,8 @@ class ATetrisGangGameMode : public AGameModeBase
 
 public:
   ATetrisGangGameMode();
+
+
 
   UPROPERTY()
   int CurrentLevel = 0;

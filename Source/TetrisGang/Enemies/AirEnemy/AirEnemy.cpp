@@ -125,41 +125,41 @@ void AAirEnemy::SelectPieceMesh()
 {
   int position = 0;
   switch (PieceRotation) {
-  case Rotations::Up:
+  case TetrisPieceRotation::Up:
     position = 0;
     break;
-  case Rotations::Right:
+  case TetrisPieceRotation::Right:
     position = 1;
     break;
-  case Rotations::Down:
+  case TetrisPieceRotation::Down:
     position = 2;
     break;
-  case Rotations::Left:
+  case TetrisPieceRotation::Left:
     position = 3;
     break;
   }
 
   switch (Pieces)
   {
-  case Pieces::Yelow:
+  case TetrisPieceColor::Yelow:
     BillboardComponent->SetSprite(YellowTextures[position]);
     break;
-  case Pieces::Cyan:
+  case TetrisPieceColor::Cyan:
     BillboardComponent->SetSprite(CyamTextures[position]);
     break;
-  case Pieces::Green:
+  case TetrisPieceColor::Green:
     BillboardComponent->SetSprite(GreenTextures[position]);
     break;
-  case Pieces::Red:
+  case TetrisPieceColor::Red:
     BillboardComponent->SetSprite(RedTextures[position]);
     break;
-  case Pieces::Orange:
+  case TetrisPieceColor::Orange:
     BillboardComponent->SetSprite(OrangeTextures[position]);
     break;
-  case Pieces::Blue:
+  case TetrisPieceColor::Blue:
     BillboardComponent->SetSprite(BlueTextures[position]);
     break;
-  case Pieces::Purple:
+  case TetrisPieceColor::Purple:
     BillboardComponent->SetSprite(PurpleTextures[position]);
     break;
   default:

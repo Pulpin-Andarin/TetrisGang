@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include <TetrisGang/Utils/Constantes.h>
+#include "../EnemyBase.h"
 #include "MeleEnemy.generated.h"
 
 class UWalkToComponent;
@@ -18,7 +19,7 @@ class UStaticMeshComponent;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMeleEnemyDeath);
 
 UCLASS()
-class TETRISGANG_API AMeleEnemy : public ACharacter
+class TETRISGANG_API AMeleEnemy : public ACharacter, public IEnemyBaseInterface
 {
   GENERATED_BODY()
 
@@ -60,10 +61,10 @@ public:
   float InitialSpeed = 0.0f;
 
   UPROPERTY(VisibleAnywhere)
-  Rotations PieceRotation;
+  TetrisPieceRotation PieceRotation;
 
   UPROPERTY(VisibleAnywhere)
-  Pieces Pieces;
+  TetrisPieceColor Pieces;
 
 
   UPROPERTY(EditAnywhere, BlueprintReadWrite)

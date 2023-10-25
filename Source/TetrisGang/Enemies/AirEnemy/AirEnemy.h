@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include <Components/BoxComponent.h>
 #include <TetrisGang/Utils/Constantes.h>
+#include "../EnemyBase.h"
 #include "AirEnemy.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAirEnemyDeath);
@@ -16,7 +17,7 @@ class UStaticMeshComponent;
 class UBoxComponent;
 
 UCLASS()
-class TETRISGANG_API AAirEnemy : public APawn
+class TETRISGANG_API AAirEnemy : public APawn, public IEnemyBaseInterface
 {
   GENERATED_BODY()
 
@@ -57,10 +58,10 @@ public:
   UStaticMeshComponent* AirMesh;
 
   UPROPERTY(VisibleAnywhere)
-  Rotations PieceRotation;
+  TetrisPieceRotation PieceRotation;
 
   UPROPERTY(VisibleAnywhere)
-  Pieces Pieces;
+  TetrisPieceColor Pieces;
 
   void SelectPieceMesh();
 

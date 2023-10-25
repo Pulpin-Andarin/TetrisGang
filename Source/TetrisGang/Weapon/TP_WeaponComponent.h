@@ -7,6 +7,8 @@
 #include "TP_WeaponComponent.generated.h"
 
 class ATetrisGangCharacter;
+class ATetrisPiece;
+class ATetrisGangGameMode;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShoot);
 
@@ -32,8 +34,11 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
   FVector MuzzleOffset;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-  TArray<UStaticMesh*> AvailablePiecesMeshes;
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+  //TArray<UStaticMesh*> AvailablePiecesMeshes;
+
+
+  virtual void BeginPlay() override;
 
   /** MappingContext */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -47,16 +52,15 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
   UInputAction* RotateBulletLeftAction;
 
-
   /** Rotate Bullet Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
   UInputAction* RotateBulletRightAction;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  UStaticMeshComponent* StaticProjectile;
-
   UPROPERTY(BlueprintAssignable)
-	  FShoot ShootEvent;
+  FShoot ShootEvent;
+
+  //UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+  //UStaticMeshComponent* CapuslePositionComponent;
 
   /** Sets default values for this component's properties */
   UTP_WeaponComponent();
@@ -79,34 +83,26 @@ public:
   void RotateBulletRight();
 
   UFUNCTION()
-  void UpdateProjectile();
-
+  void UpdateProjectileIndicator();
 
   UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	  Pieces NextPiece = Pieces::Red;
+  TetrisPieceColor NextPieceColor = TetrisPieceColor::Red;
 
+  UPROPERTY(VisibleAnyWhere)
+  TetrisPieceRotation NextPieceRotation = TetrisPieceRotation::Up;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  ATetrisPiece* TetrisPiece;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  /** The Character holding this weapon*/
+  ATetrisGangCharacter* Character;
 
 protected:
   /** Ends gameplay for this component. */
   UFUNCTION()
   virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-private:
-  /** The Character holding this weapon*/
-  ATetrisGangCharacter* Character;
-
-  UPROPERTY(VisibleAnyWhere)
-  Rotations ActualRotation = Rotations::Up;
-
-  UPROPERTY(VisibleAnyWhere)
-  Pieces ActualPiece = Pieces::Blue;
-
-
-  UPROPERTY(VisibleAnyWhere)
-  Rotations NextRotation = Rotations::Up;
-
-  UPROPERTY(VisibleAnyWhere)
-  UStaticMesh* ActualMesh;
-
+  ATetrisGangGameMode* GameMode;
 
 };

@@ -4,73 +4,32 @@
 #include "TP_WeaponComponent.h"
 #include "../FPCharacter/TetrisGangCharacter.h"
 #include "./Projectile/TetrisGangProjectile.h"
+#include "TetrisGang/Pieces/TetrisPiece.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "TetrisGang/Pieces/TetrisPiece.h"
+#include "TetrisGang/Managers/TetrisGangGameMode.h"
+#include "TetrisGang/PooledPork/PooledPork.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
 {
   // Default offset from the character location for projectiles to spawn
   MuzzleOffset = FVector(20.0f, 0.0f, 10.0f);
-  StaticProjectile = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticProjectileComponent"));
+  //CapuslePositionComponent = Cast<UStaticMeshComponent>(GetOwner()->FindComponentByTag<UStaticMeshComponent>(FName(TEXT("CapsulePosition"))));
 
+
+  //TetrisPiece->SetupAttachment(GetOwner()->GetRootComponent());
+  //TetrisPiece->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 }
 
-
-void UTP_WeaponComponent::Fire()
+void UTP_WeaponComponent::BeginPlay()
 {
-  if (Character == nullptr || Character->GetController() == nullptr)
-  {
-    return;
-  }
-
-  if (ProjectileClass != nullptr)
-  {
-    UWorld* const World = GetWorld();
-    if (World != nullptr)
-    {
-      APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
-      const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-      // MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-      const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
-
-      //Set Spawn Collision Handling Override
-      FActorSpawnParameters ActorSpawnParams;
-      ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-      // Spawn the projectile at the muzzle
-      ATetrisGangProjectile* ActualProjectile = World->SpawnActor<ATetrisGangProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-      if (IsValid(ActualProjectile))
-      {
-        ActualProjectile->Rotation = ActualRotation;
-        ActualProjectile->Piece = ActualPiece;
-        ActualProjectile->Rotate();
-        ActualProjectile->UpdateMesh(ActualMesh);
-      }
-    }
-
-    // Try and play the sound if specified
-    if (FireSound != nullptr)
-    {
-      UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
-    }
-
-    // Try and play a firing animation if specified
-    if (FireAnimation != nullptr)
-    {
-      // Get the animation object for the arms mesh
-      UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
-      if (AnimInstance != nullptr)
-      {
-        AnimInstance->Montage_Play(FireAnimation, 1.f);
-      }
-    }
-
-    CreateRandomProjectile();
-  }
+  Super::BeginPlay();
+  GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 
@@ -110,71 +69,119 @@ void UTP_WeaponComponent::AttachWeapon(ATetrisGangCharacter* TargetCharacter)
 
       // Rotate Bullet
       EnhancedInputComponent->BindAction(RotateBulletRightAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::RotateBulletRight);
-
     }
-
-
   }
 
-  UStaticMeshComponent* capusleComponent = Cast<UStaticMeshComponent>(GetOwner()->FindComponentByTag<UStaticMeshComponent>(FName(TEXT("CapsulePosition"))));
-  StaticProjectile->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-  StaticProjectile->SetRelativeLocation(capusleComponent->GetRelativeLocation());
-  StaticProjectile->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
+  UChildActorComponent& ChildActor = *Cast<UChildActorComponent>(GetOwner()->FindComponentByClass(UChildActorComponent::StaticClass()));
+  TetrisPiece = Cast<ATetrisPiece>(ChildActor.GetChildActor());
 
+  UStaticMeshComponent* CapuslePositionComponent = Cast<UStaticMeshComponent>(GetOwner()->FindComponentByTag<UStaticMeshComponent>(FName(TEXT("CapsulePosition"))));
+  //ChildActor.AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+  //ChildActor.SetWorldLocation(CapuslePositionComponent->GetComponentLocation());
+  //ChildActor.SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+  /*TetrisPiece->PieceMesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));*/
+  // 
 
-  UpdateProjectile();
+  //Init indicator
+  //TetrisPiece->SetWorldLocation(CapuslePositionComponent->GetComponentLocation());
+  //TetrisPiece->AttachToComponent(CapuslePositionComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+  //TetrisPiece->SetWorldScale3D(FVector(4.f, 4.f, 4.f));
+  UpdateProjectileIndicator();
 }
+
+
+
+void UTP_WeaponComponent::Fire()
+{
+  if (Character == nullptr || Character->GetController() == nullptr)
+  {
+    return;
+  }
+
+  if (ProjectileClass != nullptr)
+  {
+    UWorld* const World = GetWorld();
+    if (World != nullptr)
+    {
+      APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+      const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+      // MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+      const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
+
+      //Set Spawn Collision Handling Override
+      FActorSpawnParameters ActorSpawnParams;
+      ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+      // Spawn the projectile at the muzzle
+      AActor* ActorProjectile = GameMode->Pool->GetNextActor(ProjectileClass);
+      if (ActorProjectile)
+      {
+        ATetrisGangProjectile* ActualProjectile = Cast<ATetrisGangProjectile>(ActorProjectile);/*World->SpawnActor<ATetrisGangProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);*/
+        if (IsValid(ActualProjectile) && IsValid(TetrisPiece))
+        {
+          ActualProjectile->SetActorLocation(SpawnLocation);
+          ActualProjectile->SetActorRotation(SpawnRotation);
+          ATetrisPiece::InitializeNewPiece(*ActualProjectile->TetrisPieceChild, *TetrisPiece);
+        }
+      }
+    }
+
+    // Try and play the sound if specified
+    if (FireSound != nullptr)
+    {
+      UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
+    }
+
+    // Try and play a firing animation if specified
+    if (FireAnimation != nullptr)
+    {
+      // Get the animation object for the arms mesh
+      UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
+      if (AnimInstance != nullptr)
+      {
+        AnimInstance->Montage_Play(FireAnimation, 1.f);
+      }
+    }
+
+    CreateRandomProjectile();
+    ShootEvent.Broadcast();
+  }
+}
+
+
 
 void UTP_WeaponComponent::CreateRandomProjectile()
 {
-  ActualPiece = NextPiece;
-  ActualRotation = NextRotation;
-  NextPiece = Constantes::GetRandomPiece();
-  NextRotation = Constantes::GetRandomRotation();
+  TetrisPiece->PieceColor = NextPieceColor;
+  TetrisPiece->PieceRotation = NextPieceRotation;
+  NextPieceColor = Constantes::GetRandomPiece();
+  NextPieceRotation = Constantes::GetRandomRotation();
 
-  UpdateProjectile();
-
-  ShootEvent.Broadcast();
+  UpdateProjectileIndicator();
 }
 
 
-void UTP_WeaponComponent::UpdateProjectile()
+void UTP_WeaponComponent::UpdateProjectileIndicator()
 {
-  StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-  StaticProjectile->SetRelativeScale3D(FVector(2.5f, 2.5f, 2.5f));
+  //Update Mesh and rotation
+  UStaticMesh* ProjectileMesh = Constantes::GetMesh(TetrisPiece->TetrisPiecesDataTable, TetrisPiece->PieceColor);
 
-  switch (ActualPiece)
+  if (ProjectileMesh)
   {
-  case Pieces::Yelow:
-    ActualMesh = AvailablePiecesMeshes[0];
-    break;
-  case Pieces::Cyan:
-    ActualMesh = AvailablePiecesMeshes[1];
-    break;
-  case Pieces::Green:
-    ActualMesh = AvailablePiecesMeshes[2];
-    break;
-  case Pieces::Red:
-    ActualMesh = AvailablePiecesMeshes[3];
-    break;
-  case Pieces::Orange:
-    ActualMesh = AvailablePiecesMeshes[4];
-    break;
-  case Pieces::Blue:
-    ActualMesh = AvailablePiecesMeshes[5];
-    break;
-  case Pieces::Purple:
-    ActualMesh = AvailablePiecesMeshes[6];
-    break;
-  default:
-    break;
+    TetrisPiece->PieceMesh->SetStaticMesh(ProjectileMesh);
+
+    FVector ProjectileRotation = Constantes::GetRotation(TetrisPiece->TetrisRotationsDataTable, TetrisPiece->PieceRotation);
+    if (ProjectileRotation != FVector::Zero())
+    {
+      TetrisPiece->PieceMesh->SetRelativeRotation(FRotator(ProjectileRotation.X, ProjectileRotation.Y, ProjectileRotation.Z));
+    }
+    else {
+      UE_LOG(LogTemp, Error, TEXT("Projectile Rotation not found"));
+    }
   }
-  //FString  s = ActualMesh->GetFName();
-  //UE_LOG(LogTemplateCharacter, Error, TEXT("%s", ));
-  if (!IsValid(ActualMesh) || ActualMesh == nullptr) {
-    UE_LOG(LogTemplateCharacter, Warning, TEXT("Actual Mesh is null"));
+  else {
+    UE_LOG(LogTemp, Error, TEXT("Projectile Mesh not found"));
   }
-  StaticProjectile->SetStaticMesh(ActualMesh);
 }
 
 void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -197,119 +204,11 @@ void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void UTP_WeaponComponent::RotateBulletLeft()
 {
   UE_LOG(LogTemplateCharacter, Error, TEXT("Rotacion bullet left"));
-
-  switch (ActualRotation) {
-  case Rotations::Up:
-    if (ActualPiece == Pieces::Yelow)
-    {
-      ActualRotation = Rotations::Left;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 0.0));
-    }
-    else {
-      ActualRotation = Rotations::Left;
-      StaticProjectile->SetRelativeRotation(FRotator(90.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: left"));
-    break;
-  case Rotations::Right:
-    if (ActualPiece == Pieces::Yelow) {
-      ActualRotation = Rotations::Up;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    else
-    {
-      ActualRotation = Rotations::Up;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Up"));
-    break;
-  case Rotations::Down:
-    if (ActualPiece == Pieces::Yelow)
-    {
-      ActualRotation = Rotations::Right;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    else
-    {
-      ActualRotation = Rotations::Right;
-      StaticProjectile->SetRelativeRotation(FRotator(-90.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Right"));
-    break;
-  case Rotations::Left:
-    if (ActualPiece == Pieces::Yelow)
-    {
-      ActualRotation = Rotations::Down;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 0.0));
-    }
-    else
-    {
-      ActualRotation = Rotations::Down;
-      StaticProjectile->SetRelativeRotation(FRotator(180.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Down"));
-    break;
-
-
-  }
+  TetrisPiece->RotateClockwise();
 }
 
 void UTP_WeaponComponent::RotateBulletRight()
 {
   UE_LOG(LogTemplateCharacter, Error, TEXT("Rotacion bullet right"));
-
-  switch (ActualRotation) {
-  case Rotations::Up:
-    if (ActualPiece == Pieces::Yelow)
-    {
-      ActualRotation = Rotations::Right;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 0.0));
-    }
-    else
-    {
-      ActualRotation = Rotations::Right;
-      StaticProjectile->SetRelativeRotation(FRotator(-90.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Right"));
-    break;
-  case Rotations::Right:
-    if (ActualPiece == Pieces::Yelow)
-    {
-      ActualRotation = Rotations::Down;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 0.0));
-    }
-    else
-    {
-      ActualRotation = Rotations::Down;
-      StaticProjectile->SetRelativeRotation(FRotator(180.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Down"));
-    break;
-  case Rotations::Down:
-    if (ActualPiece == Pieces::Yelow)
-    {
-      ActualRotation = Rotations::Left;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    else
-    {
-      ActualRotation = Rotations::Left;
-      StaticProjectile->SetRelativeRotation(FRotator(90.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: left"));
-    break;
-  case Rotations::Left:
-    if (ActualPiece == Pieces::Yelow)
-    {
-      ActualRotation = Rotations::Up;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    else
-    {
-      ActualRotation = Rotations::Up;
-      StaticProjectile->SetRelativeRotation(FRotator(0.0, 200.0, 90.0));
-    }
-    UE_LOG(LogTemplateCharacter, Error, TEXT("Actual Rotacion: Up"));
-    break;
-  }
+  TetrisPiece->RotateCounterClockwise();
 }

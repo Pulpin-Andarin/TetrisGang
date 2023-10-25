@@ -9,33 +9,19 @@
 #include "TetrisGang/Enemies/MeleEnemy/MeleEnemy.h"
 #include "../../Managers/TetrisGangGameMode.h"
 #include "../../PooledPork/PooledPork.h"
-
-void ATetrisGangProjectile::BeginPlay()
-{
-  Super::BeginPlay();
-
-  PieceMesh = Cast<UStaticMeshComponent>(GetComponentByClass(UStaticMeshComponent::StaticClass()));
-  GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
-}
+#include "TetrisGang/Pieces/TetrisPiece.h"
+#include "Components/ChildActorComponent.h"
 
 ATetrisGangProjectile::ATetrisGangProjectile()
 {
-  // Use a sphere as a simple collision representation
-  CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
-  CollisionComp->InitSphereRadius(5.0f);
-  CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
-  CollisionComp->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
+  ChildActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("TetrisPieceChildActor"));
+  ChildActor->SetChildActorClass(ATetrisPiece::StaticClass());
 
-  // Players can't walk on it
-  CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
-  CollisionComp->CanCharacterStepUpOn = ECB_No;
-
-  // Set as root component
-  RootComponent = CollisionComp;
+  //RootComponent = TetrisPieceChild;
 
   // Use a ProjectileMovementComponent to govern this projectile's movement
   ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-  ProjectileMovement->UpdatedComponent = CollisionComp;
+  //ProjectileMovement->UpdatedComponent = CollisionComp;
   ProjectileMovement->InitialSpeed = 3000.f;
   ProjectileMovement->MaxSpeed = 3000.f;
   ProjectileMovement->bRotationFollowsVelocity = true;
@@ -43,7 +29,18 @@ ATetrisGangProjectile::ATetrisGangProjectile()
   ProjectileMovement->ProjectileGravityScale = 0.f;
 
   // Die after 3 seconds by default
-  InitialLifeSpan = 3.0f;
+  InitialLifeSpan = 0.f;
+}
+
+void ATetrisGangProjectile::BeginPlay()
+{
+  Super::BeginPlay();
+
+  TetrisPieceChild = Cast<ATetrisPiece>(ChildActor->GetChildActor());
+  TetrisPieceChild->PieceMesh->BodyInstance.SetCollisionProfileName("Projectile");
+  TetrisPieceChild->PieceMesh->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
+
+  GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -57,7 +54,6 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
       bool bPieceAndRotation = CheckPieceAndRotation(AirEnemy->Pieces, AirEnemy->PieceRotation);
       if (bPieceAndRotation)
       {
-
         GameMode->Pool->ReturnToPool(AirEnemy);
         Destroy();
       }
@@ -73,106 +69,36 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
           Destroy();
         }
       }
-      /* else {
-
-         OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-       }*/
     }
-
+    Deactivate();
+    GameMode->Pool->ReturnToPool(this);
     //Deactivate();
   }
 }
 
-void ATetrisGangProjectile::UpdateMesh(UStaticMesh* NewMesh)
+bool ATetrisGangProjectile::CheckPieceAndRotation(TetrisPieceColor EnemyPieceColor, TetrisPieceRotation EnemyPieceRotation)
 {
-  PieceMesh->SetStaticMesh(NewMesh);
-  PieceMesh->SetRelativeScale3D(FVector(15.0, 15.0, 15.0));
-}
-
-void ATetrisGangProjectile::Rotate()
-{
-  switch (Rotation)
+  if (EnemyPieceColor == TetrisPieceChild->PieceColor)
   {
-  case Rotations::Up:
-    PieceMesh->SetRelativeRotation(FRotator(0.0, 90.0, 90.0));
-    break;
-  case Rotations::Right:
-    PieceMesh->SetRelativeRotation(FRotator(90.0, 90.0, 90.0));
-    break;
-  case Rotations::Down:
-    PieceMesh->SetRelativeRotation(FRotator(180.0, 90.0, 90.0));
-    break;
-  case Rotations::Left:
-    PieceMesh->SetRelativeRotation(FRotator(-90.0, 90.0, 90.0));
-    break;
-  }
-}
-
-
-
-void ATetrisGangProjectile::Deactivate()
-{
-
-  //bIsActive = false;
-  SetActorTickEnabled(false);
-  SetActorHiddenInGame(true);
-
-  /*TargetMode = EProjectileTargetMode::Default;
-
-  FiringTurret = false;*/
-
-  if (IsValid(GetProjectileMovement()))
-  {
-    GetProjectileMovement()->SetUpdatedComponent(NULL);
-    GetProjectileMovement()->Velocity = FVector(0.0, 0.0, 0.0);
-    GetProjectileMovement()->UpdateComponentVelocity();
-    GetProjectileMovement()->bSimulationEnabled = false;
-    GetProjectileMovement()->SetComponentTickEnabled(false);
-    GetProjectileMovement()->Deactivate();
-    GetProjectileMovement()->ProjectileGravityScale = 0.f;
-  }
-
-  if (IsValid(GetCollisionComp()))
-  {
-
-    GetCollisionComp()->SetNotifyRigidBodyCollision(false);
-    GetCollisionComp()->SetGenerateOverlapEvents(false);
-    GetCollisionComp()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-  }
-
-  if (IsValid(PieceMesh))
-  {
-    PieceMesh->Deactivate();
-  }
-
-  // Return Pool
-
-}
-
-bool ATetrisGangProjectile::CheckPieceAndRotation(Pieces p, Rotations R)
-{
-  if (p == Piece)
-  {
-    if (p == Pieces::Red || p == Pieces::Green || p == Pieces::Cyan)
+    if (EnemyPieceColor == TetrisPieceColor::Red || EnemyPieceColor == TetrisPieceColor::Green || EnemyPieceColor == TetrisPieceColor::Cyan)
     {
-      if ((R == Rotations::Left || R == Rotations::Right) && (Rotation == Rotations::Left || Rotation == Rotations::Right))
+      if ((EnemyPieceRotation == TetrisPieceRotation::Left || EnemyPieceRotation == TetrisPieceRotation::Right) && (TetrisPieceChild->PieceRotation == TetrisPieceRotation::Left || TetrisPieceChild->PieceRotation == TetrisPieceRotation::Right))
       {
         return true;
       }
-      if ((R == Rotations::Up || R == Rotations::Down) && (Rotation == Rotations::Up || Rotation == Rotations::Down))
+      if ((EnemyPieceRotation == TetrisPieceRotation::Up || EnemyPieceRotation == TetrisPieceRotation::Down) && (TetrisPieceChild->PieceRotation == TetrisPieceRotation::Up || TetrisPieceChild->PieceRotation == TetrisPieceRotation::Down))
       {
         return true;
       }
     }
-    else if (p == Pieces::Yelow)
+    else if (EnemyPieceColor == TetrisPieceColor::Yelow)
     {
       return true;
     }
-    else if (R == Rotation)
+    else if (EnemyPieceRotation == TetrisPieceChild->PieceRotation)
     {
       return true;
     }
-
   }
 
   return false;
@@ -186,30 +112,67 @@ void ATetrisGangProjectile::Reactivate()
   SetActorHiddenInGame(false);
   //bIsActive = true;
 
-  if (IsValid(GetCollisionComp()))
+ /* if (IsValid(GetCollisionComp()))
   {
     GetCollisionComp()->SetNotifyRigidBodyCollision(true);
     GetCollisionComp()->SetGenerateOverlapEvents(true);
     GetCollisionComp()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-  }
+  }*/
 
   if (IsValid(GetProjectileMovement()))
   {
-    GetProjectileMovement()->SetUpdatedComponent(GetCollisionComp());
+    GetProjectileMovement()->SetUpdatedComponent(TetrisPieceChild->PieceMesh);
     GetProjectileMovement()->bSimulationEnabled = true;
     GetProjectileMovement()->SetComponentTickEnabled(true);
     GetProjectileMovement()->Activate();
-    //if (bIsParabolicProjectile)
-    //{
-    //  ProjectileMovementComponent->ProjectileGravityScale = 1.f;
-    //}
   }
 
-  if (IsValid(PieceMesh))
+
+  if (IsValid(TetrisPieceChild))
   {
-    PieceMesh->Activate(true);
+    TetrisPieceChild->PieceMesh->SetNotifyRigidBodyCollision(true);
+    TetrisPieceChild->PieceMesh->SetGenerateOverlapEvents(true);
+    //TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
   }
 
 
   //FReactivate.Broadcast(this);
+}
+
+void ATetrisGangProjectile::Deactivate()
+{
+
+  //bIsActive = false;
+  SetActorTickEnabled(false);
+  SetActorHiddenInGame(true);
+
+  if (IsValid(GetProjectileMovement()))
+  {
+    GetProjectileMovement()->SetUpdatedComponent(NULL);
+    GetProjectileMovement()->Velocity = FVector(0.0, 0.0, 0.0);
+    GetProjectileMovement()->UpdateComponentVelocity();
+    GetProjectileMovement()->bSimulationEnabled = false;
+    GetProjectileMovement()->SetComponentTickEnabled(false);
+    GetProjectileMovement()->Deactivate();
+    GetProjectileMovement()->ProjectileGravityScale = 0.f;
+  }
+
+  //if (IsValid(GetCollisionComp()))
+  //{
+
+  //  GetCollisionComp()->SetNotifyRigidBodyCollision(false);
+  //  GetCollisionComp()->SetGenerateOverlapEvents(false);
+  //  GetCollisionComp()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+  //}
+
+  if (IsValid(TetrisPieceChild))
+  {
+    TetrisPieceChild->PieceMesh->SetNotifyRigidBodyCollision(false);
+    TetrisPieceChild->PieceMesh->SetGenerateOverlapEvents(false);
+    TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+  }
+
+  // Return Pool
+
 }

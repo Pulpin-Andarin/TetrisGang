@@ -89,13 +89,13 @@ AActor* APooledPork::GetNextActor(TSubclassOf<AActor> ClassToSpawn)
       return MeleEnemy;
     }
   }
-  else if ((ClassToSpawn == ATetrisGangProjectile::StaticClass()))
+  else if (ClassToSpawn->IsChildOf(ATetrisGangProjectile::StaticClass()))
   {
     if (PiecesProjectiles.Num() > 0)
     {
       ATetrisGangProjectile* PiecesProjectile = PiecesProjectiles.Pop();
-      PiecesProjectile->Reactivate();
-      return PiecesProjectile;
+        PiecesProjectile->Reactivate();
+        return PiecesProjectile;
     }
   }
 

@@ -2,6 +2,7 @@
 
 
 #include "Constantes.h"
+#include "Engine/StaticMesh.h"
 #include <TetrisGang/Pieces/TetrisPiece.h>
 
 
