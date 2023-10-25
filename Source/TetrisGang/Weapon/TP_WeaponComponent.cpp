@@ -24,12 +24,15 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 
   //TetrisPiece->SetupAttachment(GetOwner()->GetRootComponent());
   //TetrisPiece->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+
 }
 
 void UTP_WeaponComponent::BeginPlay()
 {
   Super::BeginPlay();
   GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
+  FName Tag = TEXT("Muzzle");
+  MuzzlePosition = Cast<UStaticMeshComponent>(GetOwner()->FindComponentByTag<UStaticMeshComponent>(Tag));
 }
 
 
@@ -105,8 +108,6 @@ void UTP_WeaponComponent::Fire()
     {
       APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
       const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-      // MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-      const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
 
       //Set Spawn Collision Handling Override
       FActorSpawnParameters ActorSpawnParams;
@@ -119,7 +120,7 @@ void UTP_WeaponComponent::Fire()
         ATetrisGangProjectile* ActualProjectile = Cast<ATetrisGangProjectile>(ActorProjectile);/*World->SpawnActor<ATetrisGangProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);*/
         if (IsValid(ActualProjectile) && IsValid(TetrisPiece))
         {
-          ActualProjectile->SetActorLocation(SpawnLocation);
+          ActualProjectile->SetActorLocation(MuzzlePosition->GetComponentLocation());
           ActualProjectile->SetActorRotation(SpawnRotation);
           ATetrisPiece::InitializeNewPiece(*ActualProjectile->TetrisPieceChild, *TetrisPiece);
         }

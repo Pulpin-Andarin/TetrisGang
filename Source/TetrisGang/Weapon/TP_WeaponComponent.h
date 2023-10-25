@@ -22,6 +22,7 @@ public:
   UPROPERTY(EditDefaultsOnly, Category = Projectile)
   TSubclassOf<class ATetrisGangProjectile> ProjectileClass;
 
+
   /** Sound to play each time we fire */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
   USoundBase* FireSound;
@@ -104,5 +105,7 @@ protected:
   virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
   ATetrisGangGameMode* GameMode;
+
+  UStaticMeshComponent* MuzzlePosition;
 
 };

@@ -21,7 +21,7 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 
   // Use a ProjectileMovementComponent to govern this projectile's movement
   ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-  //ProjectileMovement->UpdatedComponent = CollisionComp;
+  ProjectileMovement->UpdatedComponent = ChildActor;
   ProjectileMovement->InitialSpeed = 3000.f;
   ProjectileMovement->MaxSpeed = 3000.f;
   ProjectileMovement->bRotationFollowsVelocity = true;
@@ -121,7 +121,7 @@ void ATetrisGangProjectile::Reactivate()
 
   if (IsValid(GetProjectileMovement()))
   {
-    GetProjectileMovement()->SetUpdatedComponent(TetrisPieceChild->PieceMesh);
+    GetProjectileMovement()->SetUpdatedComponent(ChildActor);
     GetProjectileMovement()->bSimulationEnabled = true;
     GetProjectileMovement()->SetComponentTickEnabled(true);
     GetProjectileMovement()->Activate();
