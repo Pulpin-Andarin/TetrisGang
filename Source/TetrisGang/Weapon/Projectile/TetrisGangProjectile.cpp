@@ -21,7 +21,7 @@ ATetrisGangProjectile::ATetrisGangProjectile()
 
   // Use a ProjectileMovementComponent to govern this projectile's movement
   ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-  ProjectileMovement->UpdatedComponent = ChildActor;
+  //ProjectileMovement->UpdatedComponent = ChildActor;
   ProjectileMovement->InitialSpeed = 3000.f;
   ProjectileMovement->MaxSpeed = 3000.f;
   ProjectileMovement->bRotationFollowsVelocity = true;
@@ -70,7 +70,7 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
         }
       }
     }
-    Deactivate();
+    //Deactivate();
     GameMode->Pool->ReturnToPool(this);
     //Deactivate();
   }
@@ -119,22 +119,26 @@ void ATetrisGangProjectile::Reactivate()
     GetCollisionComp()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
   }*/
 
-  if (IsValid(GetProjectileMovement()))
-  {
-    GetProjectileMovement()->SetUpdatedComponent(ChildActor);
-    GetProjectileMovement()->bSimulationEnabled = true;
-    GetProjectileMovement()->SetComponentTickEnabled(true);
-    GetProjectileMovement()->Activate();
-  }
-
-
   if (IsValid(TetrisPieceChild))
   {
     TetrisPieceChild->PieceMesh->SetNotifyRigidBodyCollision(true);
     TetrisPieceChild->PieceMesh->SetGenerateOverlapEvents(true);
     //TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+   
     TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
   }
+
+  if (IsValid(GetProjectileMovement()))
+  {
+    //GetProjectileMovement()->SetUpdatedComponent(ChildActor);
+    GetProjectileMovement()->bSimulationEnabled = true;
+    GetProjectileMovement()->SetComponentTickEnabled(true);
+    GetProjectileMovement()->Activate();
+  
+
+  }
+
+
 
 
   //FReactivate.Broadcast(this);
@@ -149,7 +153,7 @@ void ATetrisGangProjectile::Deactivate()
 
   if (IsValid(GetProjectileMovement()))
   {
-    GetProjectileMovement()->SetUpdatedComponent(NULL);
+    //GetProjectileMovement()->SetUpdatedComponent(NULL);
     GetProjectileMovement()->Velocity = FVector(0.0, 0.0, 0.0);
     GetProjectileMovement()->UpdateComponentVelocity();
     GetProjectileMovement()->bSimulationEnabled = false;

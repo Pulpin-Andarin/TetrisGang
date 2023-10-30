@@ -106,7 +106,7 @@ private:
       return FName(TEXT("Red"));
 
     case TetrisPieceColor::Yelow:
-      return FName(TEXT("Yelow"));
+      return FName(TEXT("Yellow"));
     default:
       return FName(TEXT("Error"));
     }

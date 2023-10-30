@@ -58,6 +58,7 @@ public:
     if (ProjectileMesh)
     {
       TetrisPieceToUpdate.PieceMesh->SetStaticMesh(ProjectileMesh);
+      
       FVector ProjectileRotation = Constantes::GetRotation(NewTetrisPiece.TetrisRotationsDataTable, NewTetrisPiece.PieceRotation);
       if (ProjectileRotation != FVector::Zero())
       {

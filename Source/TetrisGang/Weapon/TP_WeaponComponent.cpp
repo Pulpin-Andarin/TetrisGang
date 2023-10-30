@@ -13,6 +13,7 @@
 #include "TetrisGang/Pieces/TetrisPiece.h"
 #include "TetrisGang/Managers/TetrisGangGameMode.h"
 #include "TetrisGang/PooledPork/PooledPork.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -107,7 +108,7 @@ void UTP_WeaponComponent::Fire()
     if (World != nullptr)
     {
       APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
-      const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+      const FRotator& SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
 
       //Set Spawn Collision Handling Override
       FActorSpawnParameters ActorSpawnParams;
@@ -121,7 +122,9 @@ void UTP_WeaponComponent::Fire()
         if (IsValid(ActualProjectile) && IsValid(TetrisPiece))
         {
           ActualProjectile->SetActorLocation(MuzzlePosition->GetComponentLocation());
-          ActualProjectile->SetActorRotation(SpawnRotation);
+          //ActualProjectile->SetActorRotation(SpawnRotation);
+          //ActualProjectile->ShootDirection =
+          ActualProjectile->ProjectileMovement->Velocity = GetOwner()->GetActorForwardVector() * ActualProjectile->ProjectileMovement->InitialSpeed;
           ATetrisPiece::InitializeNewPiece(*ActualProjectile->TetrisPieceChild, *TetrisPiece);
         }
       }

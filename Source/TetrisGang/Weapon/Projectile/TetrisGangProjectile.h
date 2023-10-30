@@ -38,6 +38,8 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadwrite)
   UChildActorComponent* ChildActor;
 
+  UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
+  FVector ShootDirection;
 
 protected:
   virtual void BeginPlay();
