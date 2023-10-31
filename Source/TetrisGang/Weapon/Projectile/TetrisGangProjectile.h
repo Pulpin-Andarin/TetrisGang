@@ -24,6 +24,9 @@ class ATetrisGangProjectile : public AActor
 
 public:
 
+  /** Sphere collision component */
+  UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+  USphereComponent* CollisionComp;
 
   /** Projectile movement component */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
@@ -41,6 +44,12 @@ public:
   UPROPERTY(VisibleAnywhere, BlueprintReadwrite)
   FVector ShootDirection;
 
+  FTimerDelegate _timerDelegate;
+
+  FTimerHandle ReturnTimerHandler;
+
+  float LifeSpan = 3.0f;
+
 protected:
   virtual void BeginPlay();
 
@@ -51,11 +60,17 @@ public:
   UFUNCTION()
   void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+  /** Returns CollisionComp subobject **/
+  USphereComponent* GetCollisionComp() const { return CollisionComp; }
+
   /** Returns ProjectileMovement subobject **/
   UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
   UFUNCTION()
   void Reactivate();
+
+  UFUNCTION()
+  void ActivateReturnToPoolTimer();
 
   UFUNCTION()
   void Deactivate();

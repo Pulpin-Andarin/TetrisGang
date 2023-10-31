@@ -58,15 +58,17 @@ public:
     if (ProjectileMesh)
     {
       TetrisPieceToUpdate.PieceMesh->SetStaticMesh(ProjectileMesh);
-      
-      FVector ProjectileRotation = Constantes::GetRotation(NewTetrisPiece.TetrisRotationsDataTable, NewTetrisPiece.PieceRotation);
+
+  /*    FVector ProjectileRotation = Constantes::GetRotation(NewTetrisPiece.TetrisRotationsDataTable, NewTetrisPiece.PieceRotation);
       if (ProjectileRotation != FVector::Zero())
       {
         TetrisPieceToUpdate.PieceMesh->SetRelativeRotation(FRotator(ProjectileRotation.X, ProjectileRotation.Y, ProjectileRotation.Z));
-      }
-      else {
+      }*/
+      ChangeMeshRotation(NewTetrisPiece.PieceRotation, *NewTetrisPiece.TetrisRotationsDataTable, *TetrisPieceToUpdate.PieceMesh);
+
+    /*  else {
         UE_LOG(LogTemp, Error, TEXT("Projectile Rotation not found"));
-      }
+      }*/
     }
     else {
       UE_LOG(LogTemp, Error, TEXT("Projectile Mesh not found"));
@@ -79,6 +81,9 @@ public:
     if (Rotation != FVector::Zero())
     {
       MeshToRotate.SetRelativeRotation(FRotator(Rotation.X, Rotation.Y, Rotation.Z));
+    }
+    else {
+      UE_LOG(LogTemp, Error, TEXT("Rotation not found"));
     }
   }
 

@@ -14,14 +14,26 @@
 
 ATetrisGangProjectile::ATetrisGangProjectile()
 {
+  // Use a sphere as a simple collision representation
+  CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+  CollisionComp->InitSphereRadius(5.0f);
+  CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
+  CollisionComp->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
+
+  // Players can't walk on it
+  CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
+  CollisionComp->CanCharacterStepUpOn = ECB_No;
+
+  // Set as root component
+  RootComponent = CollisionComp;
+
   ChildActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("TetrisPieceChildActor"));
   ChildActor->SetChildActorClass(ATetrisPiece::StaticClass());
-
-  //RootComponent = TetrisPieceChild;
+  ChildActor->SetupAttachment(CollisionComp);
 
   // Use a ProjectileMovementComponent to govern this projectile's movement
   ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-  //ProjectileMovement->UpdatedComponent = ChildActor;
+  ProjectileMovement->UpdatedComponent = RootComponent;
   ProjectileMovement->InitialSpeed = 3000.f;
   ProjectileMovement->MaxSpeed = 3000.f;
   ProjectileMovement->bRotationFollowsVelocity = true;
@@ -38,7 +50,7 @@ void ATetrisGangProjectile::BeginPlay()
 
   TetrisPieceChild = Cast<ATetrisPiece>(ChildActor->GetChildActor());
   TetrisPieceChild->PieceMesh->BodyInstance.SetCollisionProfileName("Projectile");
-  TetrisPieceChild->PieceMesh->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
+  //TetrisPieceChild->PieceMesh->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
 
   GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
 }
@@ -55,7 +67,8 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
       if (bPieceAndRotation)
       {
         GameMode->Pool->ReturnToPool(AirEnemy);
-        Destroy();
+        //Destroy();
+        GameMode->Pool->ReturnToPool(this);
       }
     }
     else {
@@ -66,12 +79,12 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
         if (bPieceAndRotation)
         {
           GameMode->Pool->ReturnToPool(MeleEnemy);
-          Destroy();
+          /* Destroy();*/
+          GameMode->Pool->ReturnToPool(this);
         }
       }
     }
     //Deactivate();
-    GameMode->Pool->ReturnToPool(this);
     //Deactivate();
   }
 }
@@ -112,36 +125,41 @@ void ATetrisGangProjectile::Reactivate()
   SetActorHiddenInGame(false);
   //bIsActive = true;
 
- /* if (IsValid(GetCollisionComp()))
+  if (IsValid(GetCollisionComp()))
   {
     GetCollisionComp()->SetNotifyRigidBodyCollision(true);
     GetCollisionComp()->SetGenerateOverlapEvents(true);
     GetCollisionComp()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-  }*/
-
-  if (IsValid(TetrisPieceChild))
-  {
-    TetrisPieceChild->PieceMesh->SetNotifyRigidBodyCollision(true);
-    TetrisPieceChild->PieceMesh->SetGenerateOverlapEvents(true);
-    //TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-   
-    TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
   }
+
+  //if (IsValid(TetrisPieceChild))
+  //{
+  //  TetrisPieceChild->PieceMesh->SetNotifyRigidBodyCollision(true);
+  //  TetrisPieceChild->PieceMesh->SetGenerateOverlapEvents(true);
+  //  //TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+  //  TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::Ph);
+  //}
 
   if (IsValid(GetProjectileMovement()))
   {
-    //GetProjectileMovement()->SetUpdatedComponent(ChildActor);
+    GetProjectileMovement()->SetUpdatedComponent(RootComponent);
     GetProjectileMovement()->bSimulationEnabled = true;
     GetProjectileMovement()->SetComponentTickEnabled(true);
     GetProjectileMovement()->Activate();
-  
-
   }
 
-
+  ActivateReturnToPoolTimer();
 
 
   //FReactivate.Broadcast(this);
+}
+
+void ATetrisGangProjectile::ActivateReturnToPoolTimer()
+{
+  _timerDelegate.BindLambda([this]() {
+    GameMode->Pool->ReturnToPool(this);
+    });
+  GetWorld()->GetTimerManager().SetTimer(ReturnTimerHandler, _timerDelegate, LifeSpan, false);
 }
 
 void ATetrisGangProjectile::Deactivate()
@@ -153,7 +171,7 @@ void ATetrisGangProjectile::Deactivate()
 
   if (IsValid(GetProjectileMovement()))
   {
-    //GetProjectileMovement()->SetUpdatedComponent(NULL);
+    GetProjectileMovement()->SetUpdatedComponent(NULL);
     GetProjectileMovement()->Velocity = FVector(0.0, 0.0, 0.0);
     GetProjectileMovement()->UpdateComponentVelocity();
     GetProjectileMovement()->bSimulationEnabled = false;
@@ -162,21 +180,10 @@ void ATetrisGangProjectile::Deactivate()
     GetProjectileMovement()->ProjectileGravityScale = 0.f;
   }
 
-  //if (IsValid(GetCollisionComp()))
-  //{
-
-  //  GetCollisionComp()->SetNotifyRigidBodyCollision(false);
-  //  GetCollisionComp()->SetGenerateOverlapEvents(false);
-  //  GetCollisionComp()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-  //}
-
-  if (IsValid(TetrisPieceChild))
+  if (IsValid(GetCollisionComp()))
   {
-    TetrisPieceChild->PieceMesh->SetNotifyRigidBodyCollision(false);
-    TetrisPieceChild->PieceMesh->SetGenerateOverlapEvents(false);
-    TetrisPieceChild->PieceMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GetCollisionComp()->SetNotifyRigidBodyCollision(false);
+    GetCollisionComp()->SetGenerateOverlapEvents(false);
+    GetCollisionComp()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
   }
-
-  // Return Pool
-
 }

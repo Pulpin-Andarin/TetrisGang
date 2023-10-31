@@ -109,10 +109,11 @@ void UTP_WeaponComponent::Fire()
     {
       APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
       const FRotator& SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+      const FVector& ForwardRotation = PlayerController->PlayerCameraManager->GetCameraRotation().Vector();
 
       //Set Spawn Collision Handling Override
       FActorSpawnParameters ActorSpawnParams;
-      ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+      ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
       // Spawn the projectile at the muzzle
       AActor* ActorProjectile = GameMode->Pool->GetNextActor(ProjectileClass);
@@ -124,7 +125,8 @@ void UTP_WeaponComponent::Fire()
           ActualProjectile->SetActorLocation(MuzzlePosition->GetComponentLocation());
           //ActualProjectile->SetActorRotation(SpawnRotation);
           //ActualProjectile->ShootDirection =
-          ActualProjectile->ProjectileMovement->Velocity = GetOwner()->GetActorForwardVector() * ActualProjectile->ProjectileMovement->InitialSpeed;
+          ActualProjectile->ProjectileMovement->Velocity = ForwardRotation * ActualProjectile->ProjectileMovement->InitialSpeed;
+          ActualProjectile->ProjectileMovement->UpdateComponentVelocity();
           ATetrisPiece::InitializeNewPiece(*ActualProjectile->TetrisPieceChild, *TetrisPiece);
         }
       }
