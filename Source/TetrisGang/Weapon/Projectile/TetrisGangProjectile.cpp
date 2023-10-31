@@ -49,7 +49,7 @@ void ATetrisGangProjectile::BeginPlay()
   Super::BeginPlay();
 
   TetrisPieceChild = Cast<ATetrisPiece>(ChildActor->GetChildActor());
-  TetrisPieceChild->PieceMesh->BodyInstance.SetCollisionProfileName("Projectile");
+  //
   //TetrisPieceChild->PieceMesh->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
 
   GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());

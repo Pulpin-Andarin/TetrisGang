@@ -128,6 +128,7 @@ void UTP_WeaponComponent::Fire()
           ActualProjectile->ProjectileMovement->Velocity = ForwardRotation * ActualProjectile->ProjectileMovement->InitialSpeed;
           ActualProjectile->ProjectileMovement->UpdateComponentVelocity();
           ATetrisPiece::InitializeNewPiece(*ActualProjectile->TetrisPieceChild, *TetrisPiece);
+          ActualProjectile->TetrisPieceChild->PieceMesh->SetRelativeRotation(FRotator(0, 0, 0));
         }
       }
     }
@@ -176,14 +177,15 @@ void UTP_WeaponComponent::UpdateProjectileIndicator()
   {
     TetrisPiece->PieceMesh->SetStaticMesh(ProjectileMesh);
 
+    ATetrisPiece::ChangeMeshRotation(TetrisPiece->PieceRotation, *TetrisPiece->TetrisRotationsDataTable, *TetrisPiece->PieceMesh);
     FVector ProjectileRotation = Constantes::GetRotation(TetrisPiece->TetrisRotationsDataTable, TetrisPiece->PieceRotation);
-    if (ProjectileRotation != FVector::Zero())
-    {
-      TetrisPiece->PieceMesh->SetRelativeRotation(FRotator(ProjectileRotation.X, ProjectileRotation.Y, ProjectileRotation.Z));
-    }
-    else {
-      UE_LOG(LogTemp, Error, TEXT("Projectile Rotation not found"));
-    }
+    //if (ProjectileRotation != FVector::Zero())
+    //{
+    //  TetrisPiece->PieceMesh->SetRelativeRotation(FRotator(ProjectileRotation.X, ProjectileRotation.Y, ProjectileRotation.Z));
+    //}
+    //else {
+    //  UE_LOG(LogTemp, Error, TEXT("Projectile Rotation not found"));
+    //}
   }
   else {
     UE_LOG(LogTemp, Error, TEXT("Projectile Mesh not found"));
