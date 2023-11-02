@@ -22,7 +22,6 @@ public:
   UPROPERTY(EditDefaultsOnly, Category = Projectile)
   TSubclassOf<class ATetrisGangProjectile> ProjectileClass;
 
-
   /** Sound to play each time we fire */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
   USoundBase* FireSound;
@@ -37,7 +36,6 @@ public:
 
   //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
   //TArray<UStaticMesh*> AvailablePiecesMeshes;
-
 
   virtual void BeginPlay() override;
 
@@ -59,9 +57,6 @@ public:
 
   UPROPERTY(BlueprintAssignable)
   FShoot ShootEvent;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-  //UStaticMeshComponent* CapuslePositionComponent;
 
   /** Sets default values for this component's properties */
   UTP_WeaponComponent();
@@ -95,8 +90,8 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite)
   ATetrisPiece* TetrisPiece;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
   /** The Character holding this weapon*/
+  UPROPERTY(EditAnywhere, BlueprintReadWrite)
   ATetrisGangCharacter* Character;
 
 protected:

@@ -10,12 +10,15 @@ ATetrisPiece::ATetrisPiece()
 
   // Use a sphere as a simple collision representation
   PieceMesh->BodyInstance.SetCollisionProfileName("Projectile");
-  //PieceMesh->OnComponentHit.AddDynamic(this, &ATetrisGangProjectile::OnHit);		// set up a notification for when this component hits something blocking
-
   // Players can't walk on it
   PieceMesh->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
   PieceMesh->CanCharacterStepUpOn = ECB_No;
 
+  InitDataAsset();
+}
+
+void ATetrisPiece::InitDataAsset()
+{
   static ConstructorHelpers::FObjectFinder<UDataTable> TetrisPiecesDataObject(TEXT("/Script/Engine.DataTable'/Game/Assets/DT_TetrisPieces.DT_TetrisPieces'"));
   if (TetrisPiecesDataObject.Succeeded())
   {

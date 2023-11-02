@@ -55,11 +55,6 @@ void ATetrisGangCharacter::BeginPlay()
       Subsystem->AddMappingContext(DefaultMappingContext, 0);
     }
   }
-  //UCapsuleComponent* collision = GetCapsuleComponent();
-  //collision->OnComponentBeginOverlap.AddDynamic(this, &ATetrisGangCharacter::OnOverlapBegin);
-
-  //ATetrisGangGameMode* TGM = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
-  //TGM->Initialize();
 }
 
 //////////////////////////////////////////////////////////////////////////// Input

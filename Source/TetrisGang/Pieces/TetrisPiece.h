@@ -42,9 +42,15 @@ public:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
   UDataTable* TetrisRotationsDataTable;
 
+public:
+
   void RotateCounterClockwise();
 
   void RotateClockwise();
+
+  void InitDataAsset();
+
+  ///---- Static inline functions --- 
 
   inline static void InitializeNewPiece(ATetrisPiece& TetrisPieceToUpdate, ATetrisPiece& NewTetrisPiece)
   {
@@ -59,16 +65,7 @@ public:
     {
       TetrisPieceToUpdate.PieceMesh->SetStaticMesh(ProjectileMesh);
 
-  /*    FVector ProjectileRotation = Constantes::GetRotation(NewTetrisPiece.TetrisRotationsDataTable, NewTetrisPiece.PieceRotation);
-      if (ProjectileRotation != FVector::Zero())
-      {
-        TetrisPieceToUpdate.PieceMesh->SetRelativeRotation(FRotator(ProjectileRotation.X, ProjectileRotation.Y, ProjectileRotation.Z));
-      }*/
       ChangeMeshRotation(NewTetrisPiece.PieceRotation, *NewTetrisPiece.TetrisRotationsDataTable, *TetrisPieceToUpdate.PieceMesh);
-
-    /*  else {
-        UE_LOG(LogTemp, Error, TEXT("Projectile Rotation not found"));
-      }*/
     }
     else {
       UE_LOG(LogTemp, Error, TEXT("Projectile Mesh not found"));

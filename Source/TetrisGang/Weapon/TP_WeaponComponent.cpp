@@ -20,12 +20,6 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 {
   // Default offset from the character location for projectiles to spawn
   MuzzleOffset = FVector(20.0f, 0.0f, 10.0f);
-  //CapuslePositionComponent = Cast<UStaticMeshComponent>(GetOwner()->FindComponentByTag<UStaticMeshComponent>(FName(TEXT("CapsulePosition"))));
-
-
-  //TetrisPiece->SetupAttachment(GetOwner()->GetRootComponent());
-  //TetrisPiece->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-
 }
 
 void UTP_WeaponComponent::BeginPlay()
@@ -79,17 +73,6 @@ void UTP_WeaponComponent::AttachWeapon(ATetrisGangCharacter* TargetCharacter)
   UChildActorComponent& ChildActor = *Cast<UChildActorComponent>(GetOwner()->FindComponentByClass(UChildActorComponent::StaticClass()));
   TetrisPiece = Cast<ATetrisPiece>(ChildActor.GetChildActor());
 
-  UStaticMeshComponent* CapuslePositionComponent = Cast<UStaticMeshComponent>(GetOwner()->FindComponentByTag<UStaticMeshComponent>(FName(TEXT("CapsulePosition"))));
-  //ChildActor.AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-  //ChildActor.SetWorldLocation(CapuslePositionComponent->GetComponentLocation());
-  //ChildActor.SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
-  /*TetrisPiece->PieceMesh->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));*/
-  // 
-
-  //Init indicator
-  //TetrisPiece->SetWorldLocation(CapuslePositionComponent->GetComponentLocation());
-  //TetrisPiece->AttachToComponent(CapuslePositionComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-  //TetrisPiece->SetWorldScale3D(FVector(4.f, 4.f, 4.f));
   UpdateProjectileIndicator();
 }
 
@@ -119,7 +102,7 @@ void UTP_WeaponComponent::Fire()
       AActor* ActorProjectile = GameMode->Pool->GetNextActor(ProjectileClass);
       if (ActorProjectile)
       {
-        ATetrisGangProjectile* ActualProjectile = Cast<ATetrisGangProjectile>(ActorProjectile);/*World->SpawnActor<ATetrisGangProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);*/
+        ATetrisGangProjectile* ActualProjectile = Cast<ATetrisGangProjectile>(ActorProjectile);
         if (IsValid(ActualProjectile) && IsValid(TetrisPiece))
         {
           ActualProjectile->SetActorLocation(MuzzlePosition->GetComponentLocation());
@@ -133,7 +116,6 @@ void UTP_WeaponComponent::Fire()
           ATetrisPiece::InitializeNewPiece(*ActualProjectile->TetrisPieceChild, *TetrisPiece);
 
           ActualProjectile->TetrisPieceChild->SetActorRotation(TetrisPiece->GetActorRotation());
-          //ActualProjectile->TetrisPieceChild->PieceMesh->SetRelativeRotation(FRotator(0, 0, 0));
         }
       }
     }
@@ -183,14 +165,7 @@ void UTP_WeaponComponent::UpdateProjectileIndicator()
     TetrisPiece->PieceMesh->SetStaticMesh(ProjectileMesh);
 
     ATetrisPiece::ChangeMeshRotation(TetrisPiece->PieceRotation, *TetrisPiece->TetrisRotationsDataTable, *TetrisPiece->PieceMesh);
-    //FVector ProjectileRotation = Constantes::GetRotation(TetrisPiece->TetrisRotationsDataTable, TetrisPiece->PieceRotation);
-    //if (ProjectileRotation != FVector::Zero())
-    //{
-    //  TetrisPiece->PieceMesh->SetRelativeRotation(FRotator(ProjectileRotation.X, ProjectileRotation.Y, ProjectileRotation.Z));
-    //}
-    //else {
-    //  UE_LOG(LogTemp, Error, TEXT("Projectile Rotation not found"));
-    //}
+
   }
   else {
     UE_LOG(LogTemp, Error, TEXT("Projectile Mesh not found"));

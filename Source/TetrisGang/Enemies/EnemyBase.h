@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "EnemyBase.generated.h"
 
+class ATetrisPiece;
 UINTERFACE(MinimalAPI, Blueprintable)
 class UEnemyBaseInterface : public UInterface
 {
@@ -17,6 +18,8 @@ class IEnemyBaseInterface
 
 public:
 
+  //UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+  ATetrisPiece* TetrisChestPiece;
 
 };
 

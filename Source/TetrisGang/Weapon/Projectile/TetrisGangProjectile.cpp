@@ -75,7 +75,7 @@ void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
       AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(OtherActor);
       if (MeleEnemy)
       {
-        bool bPieceAndRotation = CheckPieceAndRotation(MeleEnemy->Pieces, MeleEnemy->PieceRotation);
+        bool bPieceAndRotation = CheckPieceAndRotation(MeleEnemy->TetrisChestPiece->PieceColor, MeleEnemy->TetrisChestPiece->PieceRotation);
         if (bPieceAndRotation)
         {
           GameMode->Pool->ReturnToPool(MeleEnemy);
