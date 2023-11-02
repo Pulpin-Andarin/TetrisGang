@@ -123,12 +123,17 @@ void UTP_WeaponComponent::Fire()
         if (IsValid(ActualProjectile) && IsValid(TetrisPiece))
         {
           ActualProjectile->SetActorLocation(MuzzlePosition->GetComponentLocation());
-          //ActualProjectile->SetActorRotation(SpawnRotation);
-          //ActualProjectile->ShootDirection =
+          FVector LookAtCameraRotation = ActualProjectile->GetActorLocation() - PlayerController->PlayerCameraManager->GetCameraLocation();
+          LookAtCameraRotation.Normalize();
+
           ActualProjectile->ProjectileMovement->Velocity = ForwardRotation * ActualProjectile->ProjectileMovement->InitialSpeed;
           ActualProjectile->ProjectileMovement->UpdateComponentVelocity();
+
+
           ATetrisPiece::InitializeNewPiece(*ActualProjectile->TetrisPieceChild, *TetrisPiece);
-          ActualProjectile->TetrisPieceChild->PieceMesh->SetRelativeRotation(FRotator(0, 0, 0));
+
+          ActualProjectile->TetrisPieceChild->SetActorRotation(TetrisPiece->GetActorRotation());
+          //ActualProjectile->TetrisPieceChild->PieceMesh->SetRelativeRotation(FRotator(0, 0, 0));
         }
       }
     }
@@ -178,7 +183,7 @@ void UTP_WeaponComponent::UpdateProjectileIndicator()
     TetrisPiece->PieceMesh->SetStaticMesh(ProjectileMesh);
 
     ATetrisPiece::ChangeMeshRotation(TetrisPiece->PieceRotation, *TetrisPiece->TetrisRotationsDataTable, *TetrisPiece->PieceMesh);
-    FVector ProjectileRotation = Constantes::GetRotation(TetrisPiece->TetrisRotationsDataTable, TetrisPiece->PieceRotation);
+    //FVector ProjectileRotation = Constantes::GetRotation(TetrisPiece->TetrisRotationsDataTable, TetrisPiece->PieceRotation);
     //if (ProjectileRotation != FVector::Zero())
     //{
     //  TetrisPiece->PieceMesh->SetRelativeRotation(FRotator(ProjectileRotation.X, ProjectileRotation.Y, ProjectileRotation.Z));
