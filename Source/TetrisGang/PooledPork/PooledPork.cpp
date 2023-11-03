@@ -8,6 +8,7 @@
 #include <TetrisGang/Enemies/Projectiles/EnemyProjectile.h>
 #include <TetrisGang/Enemies/AirEnemy/AirController.h>
 #include "../Weapon/Projectile/TetrisGangProjectile.h"
+#include "TetrisGang/PooledPork/IPoolable.h"
 
 // Sets default values
 APooledPork::APooledPork()
@@ -94,39 +95,39 @@ AActor* APooledPork::GetNextActor(TSubclassOf<AActor> ClassToSpawn)
     if (PiecesProjectiles.Num() > 0)
     {
       ATetrisGangProjectile* PiecesProjectile = PiecesProjectiles.Pop();
-        PiecesProjectile->Reactivate();
-        return PiecesProjectile;
+      PiecesProjectile->Reactivate();
+      return PiecesProjectile;
     }
   }
 
   return nullptr;
 }
+//
+//void APooledPork::ReturnToPool(TScriptInterface<IIPoolable> ActorToPool)
+//{
+//  if (Cast<AAirEnemy>(&ActorToPool))
+//  {
+//    AAirEnemy* AirEnemy = Cast<AAirEnemy>(&ActorToPool);
+//    AirEnemy->Deactivate();
+//    AirEnemy->SetActorLocation(PoolLocation);
+//    AirEnemies.Push(AirEnemy);
+//  }
+//  else if ((Cast<AMeleEnemy>(&ActorToPool)))
+//  {
+//    AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(&ActorToPool);
+//    MeleEnemy->Deactivate();
+//    MeleEnemy->SetActorLocation(PoolLocation);
+//    MeleEnemies.Push(MeleEnemy);
+//  }
+//  else if ((Cast<ATetrisGangProjectile>(&ActorToPool)))
+//  {
+//    ATetrisGangProjectile* Projectile = Cast<ATetrisGangProjectile>(&ActorToPool);
+//    Projectile->Deactivate();
+//    Projectile->SetActorLocation(PoolLocation);
+//    PiecesProjectiles.Push(Projectile);
+//
+//    //PiecesProjectiles.Push((Cast<ATetrisGangProjectile>(ActorToPool)));
+//  }
 
-void APooledPork::ReturnToPool(AActor* ActorToPool)
-{
-  if (Cast<AAirEnemy>(ActorToPool))
-  {
-    AAirEnemy* AirEnemy = Cast<AAirEnemy>(ActorToPool);
-    AirEnemy->Deactivate();
-    AirEnemy->SetActorLocation(PoolLocation);
-    AirEnemies.Push(AirEnemy);
-  }
-  else if ((Cast<AMeleEnemy>(ActorToPool)))
-  {
-    AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(ActorToPool);
-    MeleEnemy->Deactivate();
-    MeleEnemy->SetActorLocation(PoolLocation);
-    MeleEnemies.Push(MeleEnemy);
-  }
-  else if ((Cast<ATetrisGangProjectile>(ActorToPool)))
-  {
-    ATetrisGangProjectile* Projectile = Cast<ATetrisGangProjectile>(ActorToPool);
-    Projectile->Deactivate();
-    Projectile->SetActorLocation(PoolLocation);
-    PiecesProjectiles.Push(Projectile);
 
-    //PiecesProjectiles.Push((Cast<ATetrisGangProjectile>(ActorToPool)));
-  }
-
-}
 

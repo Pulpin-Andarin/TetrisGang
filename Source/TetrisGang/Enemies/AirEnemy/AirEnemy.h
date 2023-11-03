@@ -46,10 +46,13 @@ public:
   void EnemyDeath();
 
   UFUNCTION()
-  void Reactivate();
+  virtual void Reactivate() override;
 
   UFUNCTION()
-  void Deactivate();
+  virtual void Deactivate() override;
+
+  UFUNCTION()
+  virtual void ReturnToPool() override;
 
   UPROPERTY(EditAnyWhere, BlueprintReadWrite)
   UBoxComponent* BoxCollision;
@@ -57,36 +60,36 @@ public:
   UPROPERTY(EditAnyWhere, BlueprintReadWrite)
   UStaticMeshComponent* AirMesh;
 
-  UPROPERTY(VisibleAnywhere)
-  TetrisPieceRotation PieceRotation;
+  //UPROPERTY(VisibleAnywhere)
+  //TetrisPieceRotation PieceRotation;
 
-  UPROPERTY(VisibleAnywhere)
-  TetrisPieceColor Pieces;
+  //UPROPERTY(VisibleAnywhere)
+  //TetrisPieceColor Pieces;
 
-  void SelectPieceMesh();
+  //void SelectPieceMesh();
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  TArray<UTexture2D*> YellowTextures;
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  //TArray<UTexture2D*> YellowTextures;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  TArray<UTexture2D*> CyamTextures;
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  //TArray<UTexture2D*> CyamTextures;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  TArray<UTexture2D*> GreenTextures;
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  //TArray<UTexture2D*> GreenTextures;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  TArray<UTexture2D*> RedTextures;
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  //TArray<UTexture2D*> RedTextures;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  TArray<UTexture2D*> OrangeTextures;
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  //TArray<UTexture2D*> OrangeTextures;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  TArray<UTexture2D*> BlueTextures;
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  //TArray<UTexture2D*> BlueTextures;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  TArray<UTexture2D*> PurpleTextures;
+  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
+  //TArray<UTexture2D*> PurpleTextures;
 
-  UPROPERTY()
-  UBillboardComponent* BillboardComponent;
+  //UPROPERTY()
+  //UBillboardComponent* BillboardComponent;
 
 };

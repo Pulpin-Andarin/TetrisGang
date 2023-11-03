@@ -3,16 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TetrisGang/PooledPork/IPoolable.h"
+#include "TetrisGang/Utils/Constantes.h"
+#include "TetrisGang/Pieces/TetrisPiece.h"
+#include "TetrisGang/Managers/TetrisGangGameMode.h"
 #include "EnemyBase.generated.h"
 
-class ATetrisPiece;
 UINTERFACE(MinimalAPI, Blueprintable)
 class UEnemyBaseInterface : public UInterface
 {
   GENERATED_BODY()
 };
 
-class IEnemyBaseInterface
+class IEnemyBaseInterface : public IIPoolable
 {
   GENERATED_BODY()
 
@@ -20,6 +23,46 @@ public:
 
   //UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
   ATetrisPiece* TetrisChestPiece;
+
+  ATetrisGangGameMode* GameMode;
+
+  //UFUNCTION()
+  virtual inline void SetRandomPieceInChest() {
+    TetrisChestPiece->PieceColor = Constantes::GetRandomPiece();
+    TetrisChestPiece->PieceRotation = Constantes::GetRandomRotation();
+    TetrisChestPiece->PieceMesh->SetStaticMesh(Constantes::GetMesh(TetrisChestPiece->TetrisPiecesDataTable, TetrisChestPiece->PieceColor));
+    FVector rot = Constantes::GetRotation(TetrisChestPiece->TetrisRotationsDataTable, TetrisChestPiece->PieceRotation);
+    TetrisChestPiece->PieceMesh->SetRelativeRotation(FRotator(rot.X, rot.Y, rot.Z));
+  };
+
+
+  // Inherited via IIPoolable
+  virtual inline void Reactivate() override {
+    SetRandomPieceInChest();
+  };
+
+  virtual inline void Deactivate() override
+  {
+    // Do nothing yet
+  };
+
+
+  // Inherited via IIPoolable
+  inline void ReturnToPool() override
+  {
+
+    Deactivate();
+
+  };
+
+  //void IEnemyBaseInterface::ReturnToPool()
+  //{
+  //  //AAirEnemy* AirEnemy = Cast<AAirEnemy>(&ActorToPool);
+  //  AirEnemy->Deactivate();
+  //  AirEnemy->SetActorLocation(PoolLocation);
+  //  //AirEnemies.Push(AirEnemy);
+  //}
+
 
 };
 

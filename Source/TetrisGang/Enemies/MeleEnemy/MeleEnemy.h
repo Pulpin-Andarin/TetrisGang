@@ -38,15 +38,6 @@ public:
   // Called to bind functionality to input
   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-  UFUNCTION()
-  void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
-    AActor* OtherActor,
-    UPrimitiveComponent* OtherComp,
-    int32 OtherBodyIndex,
-    bool bFromSweep,
-    const FHitResult& SweepResult);
-
-
   bool bIsActive;
 
   UPROPERTY(EditAnywhere)
@@ -60,42 +51,6 @@ public:
 
   float InitialSpeed = 0.0f;
 
-  //UPROPERTY(VisibleAnywhere)
-  //TetrisPieceRotation PieceRotation;
-
-  //UPROPERTY(VisibleAnywhere)
-  //TetrisPieceColor Pieces;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //UStaticMeshComponent* StaticProjectile;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //UStaticMeshComponent* StaticProjectileElDeverda;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //TArray<UTexture2D*> YellowTextures;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //TArray<UTexture2D*> CyamTextures;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //TArray<UTexture2D*> GreenTextures;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //TArray<UTexture2D*> RedTextures;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //TArray<UTexture2D*> OrangeTextures;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //TArray<UTexture2D*> BlueTextures;
-
-  //UPROPERTY(EditAnywhere, BlueprintReadWrite)
-  //TArray<UTexture2D*> PurpleTextures;
-
-  //UPROPERTY()
-  //UBillboardComponent* BillboardComponent;
-
   UPROPERTY()
   FMeleEnemyDeath MeleEnemyDeath;
 
@@ -103,14 +58,12 @@ public:
   void EnemyDeath();
 
   UFUNCTION()
-  void Reactivate();
-
-  void SetRandomPieceInChest();
+  virtual void Reactivate() override;
 
   UFUNCTION()
-  void Deactivate();
+  virtual void Deactivate() override;
 
-  //UFUNCTION()
-  //void SelectPieceMesh();
+  UFUNCTION()
+  virtual void ReturnToPool() override;
 
 };

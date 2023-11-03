@@ -52,8 +52,8 @@ public:
   UFUNCTION()
   void InitializePool();
 
-  UFUNCTION()
-  void ReturnToPool(AActor* ActorToPool);
+  //UFUNCTION()
+  //void ReturnToPool(TScriptInterface<IIPoolable> ActorToPool);
 
 protected:
   // Called when the game starts or when spawned
@@ -68,11 +68,11 @@ public:
 
   /** Projectile class to spawn */
   UPROPERTY(EditDefaultsOnly)
-  TSubclassOf<class AMeleEnemy> MeleEnemyClass;  
-  
+  TSubclassOf<class AMeleEnemy> MeleEnemyClass;
+
   /** Projectile class to spawn */
   UPROPERTY(EditDefaultsOnly)
-  TSubclassOf<class AAIController> MeleEnemyControllerClass;  
+  TSubclassOf<class AAIController> MeleEnemyControllerClass;
   /** Projectile class to spawn */
   UPROPERTY(EditDefaultsOnly)
   TSubclassOf<class AAIController> AirEnemyControllerClass;

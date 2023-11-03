@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "../../Utils/Constantes.h"
+#include "TetrisGang/PooledPork/IPoolable.h"
 #include "TetrisGangProjectile.generated.h"
 
 
@@ -18,7 +19,7 @@ class ATetrisPiece;
 
 
 UCLASS(config = Game)
-class ATetrisGangProjectile : public AActor
+class ATetrisGangProjectile : public AActor, public IIPoolable
 {
   GENERATED_BODY()
 
@@ -67,13 +68,17 @@ public:
   UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
   UFUNCTION()
-  void Reactivate();
+  virtual void Reactivate() override;
+
+  UFUNCTION()
+  virtual void Deactivate() override;
+
+  UFUNCTION()
+  virtual void ReturnToPool() override;
 
   UFUNCTION()
   void ActivateReturnToPoolTimer();
 
-  UFUNCTION()
-  void Deactivate();
 
   UFUNCTION()
   bool CheckPieceAndRotation(TetrisPieceColor p, TetrisPieceRotation R);

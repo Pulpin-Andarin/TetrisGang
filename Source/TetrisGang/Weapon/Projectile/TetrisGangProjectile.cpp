@@ -11,6 +11,7 @@
 #include "../../PooledPork/PooledPork.h"
 #include "TetrisGang/Pieces/TetrisPiece.h"
 #include "Components/ChildActorComponent.h"
+#include "TetrisGang/PooledPork/IPoolable.h"
 
 ATetrisGangProjectile::ATetrisGangProjectile()
 {
@@ -58,32 +59,38 @@ void ATetrisGangProjectile::BeginPlay()
 void ATetrisGangProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
   // Only add impulse and destroy projectile if we hit a physics
+
+
   if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) /*&& OtherComp->IsSimulatingPhysics()*/)
   {
-    AAirEnemy* AirEnemy = Cast<AAirEnemy>(OtherActor);
-    if (AirEnemy)
+    IEnemyBaseInterface* Enemy = Cast<IEnemyBaseInterface>(OtherActor);
+    if (Enemy)
     {
-      bool bPieceAndRotation = CheckPieceAndRotation(AirEnemy->Pieces, AirEnemy->PieceRotation);
+      bool bPieceAndRotation = CheckPieceAndRotation(Enemy->TetrisChestPiece->PieceColor, Enemy->TetrisChestPiece->PieceRotation);
       if (bPieceAndRotation)
       {
-        GameMode->Pool->ReturnToPool(AirEnemy);
-        //Destroy();
-        GameMode->Pool->ReturnToPool(this);
+        //TScriptInterface<IIPoolable>* PoolActor = Cast<TScriptInterface<IIPoolable>>(Enemy);
+        Enemy->ReturnToPool();
+        ReturnToPool();
+
+        //GameMode->Pool->ReturnToPool(PoolActor);
+        ////Destroy();
+        //GameMode->Pool->ReturnToPool(this);
       }
     }
-    else {
-      AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(OtherActor);
-      if (MeleEnemy)
-      {
-        bool bPieceAndRotation = CheckPieceAndRotation(MeleEnemy->TetrisChestPiece->PieceColor, MeleEnemy->TetrisChestPiece->PieceRotation);
-        if (bPieceAndRotation)
-        {
-          GameMode->Pool->ReturnToPool(MeleEnemy);
-          /* Destroy();*/
-          GameMode->Pool->ReturnToPool(this);
-        }
-      }
-    }
+    //else {
+    //  AMeleEnemy* MeleEnemy = Cast<AMeleEnemy>(OtherActor);
+    //  if (MeleEnemy)
+    //  {
+    //    bool bPieceAndRotation = CheckPieceAndRotation(MeleEnemy->TetrisChestPiece->PieceColor, MeleEnemy->TetrisChestPiece->PieceRotation);
+    //    if (bPieceAndRotation)
+    //    {
+    //      GameMode->Pool->ReturnToPool(MeleEnemy);
+    //      /* Destroy();*/
+    //      GameMode->Pool->ReturnToPool(this);
+    //    }
+    //  }
+    //}
     //Deactivate();
     //Deactivate();
   }
@@ -157,7 +164,7 @@ void ATetrisGangProjectile::Reactivate()
 void ATetrisGangProjectile::ActivateReturnToPoolTimer()
 {
   _timerDelegate.BindLambda([this]() {
-    GameMode->Pool->ReturnToPool(this);
+    ReturnToPool();
     });
   GetWorld()->GetTimerManager().SetTimer(ReturnTimerHandler, _timerDelegate, LifeSpan, false);
 }
@@ -186,4 +193,11 @@ void ATetrisGangProjectile::Deactivate()
     GetCollisionComp()->SetGenerateOverlapEvents(false);
     GetCollisionComp()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
   }
+}
+
+void ATetrisGangProjectile::ReturnToPool()
+{
+  Deactivate();
+  SetActorLocation(GameMode->Pool->PoolLocation);
+  GameMode->Pool->PiecesProjectiles.Push(this);
 }

@@ -10,6 +10,7 @@
 #include <TetrisGang/Managers/TetrisGangGameMode.h>
 #include <TetrisGang/Pieces/TetrisPiece.h>
 #include "Components/ChildActorComponent.h"
+#include "TetrisGang/PooledPork/PooledPork.h"
 
 // Sets default values
 AMeleEnemy::AMeleEnemy()
@@ -39,7 +40,7 @@ void AMeleEnemy::BeginPlay()
     InitialSpeed = MovementComponent->MaxWalkSpeed;
   }
 
-  ATetrisGangGameMode* GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
+  GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
   MeleEnemyDeath.AddDynamic(GameMode, &ATetrisGangGameMode::UpdateEnemyCounter);
 
   //BillboardComponent = Cast<UBillboardComponent>(FindComponentByTag<UBillboardComponent>(FName(TEXT("billboardPiece"))));
@@ -65,18 +66,14 @@ void AMeleEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void AMeleEnemy::Reactivate()
 {
+  IEnemyBaseInterface::Reactivate();
+
   SetActorTickEnabled(true);
 
   if (GetController() == nullptr)
   {
     AICharacterController->Possess(this);
   }
-
-
-  //if (IsValid(MovementComponent))
-  //{
-  //  MovementComponent->MaxWalkSpeed = InitialSpeed;
-  //}
 
   if (IsValid(CapsuleComponentCollision))
   {
@@ -100,23 +97,13 @@ void AMeleEnemy::Reactivate()
   }
 
   GetCharacterMovement()->GravityScale = 1.f;
-
-
-  SetRandomPieceInChest();
-  //SelectPieceMesh();
 }
 
-void AMeleEnemy::SetRandomPieceInChest()
-{
-  TetrisChestPiece->PieceColor = Constantes::GetRandomPiece();
-  TetrisChestPiece->PieceRotation = Constantes::GetRandomRotation();
-  TetrisChestPiece->PieceMesh->SetStaticMesh(Constantes::GetMesh(TetrisChestPiece->TetrisPiecesDataTable, TetrisChestPiece->PieceColor));
-  FVector rot = Constantes::GetRotation(TetrisChestPiece->TetrisRotationsDataTable, TetrisChestPiece->PieceRotation);
-  TetrisChestPiece->PieceMesh->SetRelativeRotation(FRotator(rot.X, rot.Y, rot.Z));
-}
 
 void AMeleEnemy::Deactivate()
 {
+  IEnemyBaseInterface::Deactivate();
+
   SetActorTickEnabled(false);
   if (IsValid(GetMesh()))
   {
@@ -139,75 +126,17 @@ void AMeleEnemy::Deactivate()
 
 }
 
+void AMeleEnemy::ReturnToPool()
+{
+  IEnemyBaseInterface::ReturnToPool();
+  SetActorLocation(GameMode->Pool->PoolLocation);
+  GameMode->Pool->MeleEnemies.Push(this);
+}
+
 
 void AMeleEnemy::EnemyDeath()
 {
   MeleEnemyDeath.Broadcast();
 }
 
-
-// Called to bind functionality to input
-void AMeleEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-  if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
-  {
-    /*if (OtherActor->IsA<ATetrisPiece>())
-    {
-      EmunPiece Piece	 = Cast<ATetrisPiece>(OtherActor)->GetPiece();
-      EmunRotation Rotarion = Cast<ATetrisPiece>(OtherActor)->GetRotation();
-      if (Piece == this->Piece && Rotation == this->Rotation)
-      {
-        Died();
-      }
-    }*/
-  }
-}
-//
-//void AMeleEnemy::SelectPieceMesh()
-//{
-//  /* int position = 0;
-//   switch (PieceRotation) {
-//   case TetrisPieceRotation::Up:
-//     position = 0;
-//     break;
-//   case TetrisPieceRotation::Right:
-//     position = 1;
-//     break;
-//   case TetrisPieceRotation::Down:
-//     position = 2;
-//     break;
-//   case TetrisPieceRotation::Left:
-//     position = 3;
-//     break;
-//   }
-//
-//   switch (Pieces)
-//   {
-//   case TetrisPieceColor::Yelow:
-//     BillboardComponent->SetSprite(YellowTextures[position]);
-//     break;
-//   case TetrisPieceColor::Cyan:
-//     BillboardComponent->SetSprite(CyamTextures[position]);
-//     break;
-//   case TetrisPieceColor::Green:
-//     BillboardComponent->SetSprite(GreenTextures[position]);
-//     break;
-//   case TetrisPieceColor::Red:
-//     BillboardComponent->SetSprite(RedTextures[position]);
-//     break;
-//   case TetrisPieceColor::Orange:
-//     BillboardComponent->SetSprite(OrangeTextures[position]);
-//     break;
-//   case TetrisPieceColor::Blue:
-//     BillboardComponent->SetSprite(BlueTextures[position]);
-//     break;
-//   case TetrisPieceColor::Purple:
-//     BillboardComponent->SetSprite(PurpleTextures[position]);
-//     break;
-//   default:
-//     break;
-//   }
-//
-//   BillboardComponent->SetRelativeScale3D(FVector(0.1, 0.1, 0.1));*/
-//}
 

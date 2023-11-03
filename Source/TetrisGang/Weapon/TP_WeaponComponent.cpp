@@ -191,12 +191,14 @@ void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void UTP_WeaponComponent::RotateBulletLeft()
 {
-  UE_LOG(LogTemplateCharacter, Error, TEXT("Rotacion bullet left"));
+  UE_LOG(LogTemplateCharacter, Log, TEXT("Rotacion bullet left"));
   TetrisPiece->RotateCounterClockwise();
 }
 
 void UTP_WeaponComponent::RotateBulletRight()
 {
-  UE_LOG(LogTemplateCharacter, Error, TEXT("Rotacion bullet right"));
+  UE_LOG(LogTemplateCharacter, Log, TEXT("Rotacion bullet right"));
   TetrisPiece->RotateClockwise();
 }
+
+
