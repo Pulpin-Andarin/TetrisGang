@@ -24,11 +24,6 @@ void AAirEnemy::BeginPlay()
   Super::BeginPlay();
   GameMode = Cast<ATetrisGangGameMode>(GetWorld()->GetAuthGameMode());
   AirEnemyDeath.AddDynamic(GameMode, &ATetrisGangGameMode::UpdateEnemyCounter);
-  //AIController = Cast<AAIController>(GetController());
-
-  //AirMesh = Cast<UStaticMeshComponent>(FindComponentByTag<UStaticMeshComponent>(TEXT("BoxMesh")));
-  //BoxCollision = Cast<UBoxComponent>(FindComponentByTag<UBoxComponent>(FName(TEXT("BoxColl"))));
-  //BillboardComponent = Cast<UBillboardComponent>(FindComponentByTag<UBillboardComponent>(FName(TEXT("billboardPiece"))));
 
   UChildActorComponent& ChildActor = *Cast<UChildActorComponent>(FindComponentByClass(UChildActorComponent::StaticClass()));
   TetrisChestPiece = Cast<ATetrisPiece>(ChildActor.GetChildActor());
@@ -57,8 +52,7 @@ void AAirEnemy::EnemyDeath()
 void AAirEnemy::Reactivate()
 {
   IEnemyBaseInterface::Reactivate();
-  //SetActorTickEnabled(true);
-
+  SetActorTickEnabled(true);
   if (GetController() == nullptr)
   {
     AIController->Possess(this);
@@ -72,7 +66,6 @@ void AAirEnemy::Reactivate()
 
   if (IsValid(AirMesh))
   {
-    //AirMesh->ResetAnimInstanceDynamics(ETeleportType::ResetPhysics);
     AirMesh->Activate(true);
     AirMesh->SetVisibility(true);
   }
@@ -94,7 +87,6 @@ void AAirEnemy::Deactivate()
   SetActorTickEnabled(false);
   if (IsValid(AirMesh))
   {
-    //AirMesh->ResetAnimInstanceDynamics(ETeleportType::TeleportPhysics);
     AirMesh->SetVisibility(false);
     AirMesh->Deactivate();
   }
@@ -108,10 +100,6 @@ void AAirEnemy::Deactivate()
       AIController->UnPossess();
     }
   }
-
-  //ReturnToPool//
-
-  //GetCharacterMovement()->GravityScale = 0.f;
 }
 
 void AAirEnemy::ReturnToPool()
@@ -120,53 +108,3 @@ void AAirEnemy::ReturnToPool()
   SetActorLocation(GameMode->Pool->PoolLocation);
   GameMode->Pool->AirEnemies.Push(this);
 }
-
-//
-//void AAirEnemy::SelectPieceMesh()
-//{
-//  int position = 0;
-//  switch (PieceRotation) {
-//  case TetrisPieceRotation::Up:
-//    position = 0;
-//    break;
-//  case TetrisPieceRotation::Right:
-//    position = 1;
-//    break;
-//  case TetrisPieceRotation::Down:
-//    position = 2;
-//    break;
-//  case TetrisPieceRotation::Left:
-//    position = 3;
-//    break;
-//  }
-//
-//  switch (Pieces)
-//  {
-//  case TetrisPieceColor::Yelow:
-//    BillboardComponent->SetSprite(YellowTextures[position]);
-//    break;
-//  case TetrisPieceColor::Cyan:
-//    BillboardComponent->SetSprite(CyamTextures[position]);
-//    break;
-//  case TetrisPieceColor::Green:
-//    BillboardComponent->SetSprite(GreenTextures[position]);
-//    break;
-//  case TetrisPieceColor::Red:
-//    BillboardComponent->SetSprite(RedTextures[position]);
-//    break;
-//  case TetrisPieceColor::Orange:
-//    BillboardComponent->SetSprite(OrangeTextures[position]);
-//    break;
-//  case TetrisPieceColor::Blue:
-//    BillboardComponent->SetSprite(BlueTextures[position]);
-//    break;
-//  case TetrisPieceColor::Purple:
-//    BillboardComponent->SetSprite(PurpleTextures[position]);
-//    break;
-//  default:
-//    break;
-//  }
-//
-//  BillboardComponent->SetRelativeScale3D(FVector(0.1, 0.1, 0.1));
-//}
-
