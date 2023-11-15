@@ -43,7 +43,7 @@ public:
   AAIController* AIController;
 
   UFUNCTION()
-  void EnemyDeath();
+  virtual void EnemyDeath() override;
 
   UFUNCTION()
   virtual void Reactivate() override;

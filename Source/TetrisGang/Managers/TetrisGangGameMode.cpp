@@ -22,6 +22,7 @@ void ATetrisGangGameMode::UpdateEnemyCounter()
 {
   CurrentEnemyDeaths++;
   TotalPoints += 100;
+  UpdateEnemyCounterEvent.Broadcast(TotalPoints);
   if (CurrentEnemyDeaths >= DeathsPerLevel)
   {
     CurrentEnemyDeaths = 0;
@@ -40,7 +41,7 @@ void ATetrisGangGameMode::UpdateLevel()
 
 void ATetrisGangGameMode::BeginPlay()
 {
-
+  Super::BeginPlay();
   Initialize();
 }
 

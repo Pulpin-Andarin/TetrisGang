@@ -10,6 +10,7 @@ class APooledPork;
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLevelUp);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateEnemyCounter, int, totalPoints);
 
 UCLASS(minimalapi)
 class ATetrisGangGameMode : public AGameModeBase
@@ -51,6 +52,9 @@ public:
 
   UPROPERTY(BlueprintAssignable)
   FLevelUp LevelUpEvent;
+
+  UPROPERTY(BlueprintAssignable)
+  FUpdateEnemyCounter UpdateEnemyCounterEvent;
 };
 
 

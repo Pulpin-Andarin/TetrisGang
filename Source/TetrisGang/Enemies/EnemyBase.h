@@ -46,14 +46,16 @@ public:
     // Do nothing yet
   };
 
+  virtual inline void EnemyDeath() = 0;
 
   // Inherited via IIPoolable
   inline void ReturnToPool() override
   {
 
     Deactivate();
-
+    EnemyDeath();
   };
+
 
   //void IEnemyBaseInterface::ReturnToPool()
   //{

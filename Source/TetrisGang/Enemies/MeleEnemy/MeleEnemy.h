@@ -38,6 +38,7 @@ public:
   // Called to bind functionality to input
   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+  UPROPERTY()
   bool bIsActive;
 
   UPROPERTY(EditAnywhere)
@@ -49,13 +50,14 @@ public:
   UPROPERTY(BlueprintReadWrite)
   AAIController* AICharacterController;
 
+  UPROPERTY()
   float InitialSpeed = 0.0f;
 
   UPROPERTY()
   FMeleEnemyDeath MeleEnemyDeath;
 
   UFUNCTION()
-  void EnemyDeath();
+  virtual void EnemyDeath() override;
 
   UFUNCTION()
   virtual void Reactivate() override;
