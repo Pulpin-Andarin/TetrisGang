@@ -133,6 +133,6 @@ void ATetrisGangCharacter::ReceiveDamage()
       PlayerDeath.Broadcast();
     }
 
-    PlayerHitted.Broadcast();
+    PlayerHitted.Broadcast(Health);
   }
 }

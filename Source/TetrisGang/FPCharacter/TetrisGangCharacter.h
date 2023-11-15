@@ -17,7 +17,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeath);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerHitted);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerHitted, int, ActualLife);
 
 UCLASS(config = Game)
 class ATetrisGangCharacter : public ACharacter
@@ -82,7 +82,7 @@ public:
   FPlayerDeath PlayerDeath;
 
   UPROPERTY(BlueprintAssignable)
-  FPlayerDeath PlayerHitted;
+  FPlayerHitted PlayerHitted;
 
 protected:
   /** Called for movement input */
@@ -104,7 +104,7 @@ public:
   USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
   /** Returns FirstPersonCameraComponent subobject **/
   UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
-  
+
   UPROPERTY(EditAnywhere)
   bool bGodMode = false;
 

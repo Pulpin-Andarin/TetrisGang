@@ -131,6 +131,7 @@ void AMeleEnemy::ReturnToPool()
   IEnemyBaseInterface::ReturnToPool();
   SetActorLocation(GameMode->Pool->PoolLocation);
   GameMode->Pool->MeleEnemies.Push(this);
+  EnemyDeath();
 }
 
 
