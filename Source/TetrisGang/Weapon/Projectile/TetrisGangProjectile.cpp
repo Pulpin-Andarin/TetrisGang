@@ -130,7 +130,7 @@ void ATetrisGangProjectile::Reactivate()
 
   SetActorTickEnabled(true);
   SetActorHiddenInGame(false);
-  //bIsActive = true;
+  bisActive = true;
 
   if (IsValid(GetCollisionComp()))
   {
@@ -172,7 +172,7 @@ void ATetrisGangProjectile::ActivateReturnToPoolTimer()
 void ATetrisGangProjectile::Deactivate()
 {
 
-  //bIsActive = false;
+  bisActive = false;
   SetActorTickEnabled(false);
   SetActorHiddenInGame(true);
 

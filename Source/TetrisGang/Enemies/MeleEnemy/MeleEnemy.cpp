@@ -79,6 +79,7 @@ void AMeleEnemy::Reactivate()
   {
     CapsuleComponentCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     CapsuleComponentCollision->SetCanEverAffectNavigation(true);
+    //CapsuleComponentCollision->SetSimulatePhysics(true);
   }
 
   if (IsValid(GetMesh()))
@@ -105,6 +106,9 @@ void AMeleEnemy::Deactivate()
   IEnemyBaseInterface::Deactivate();
 
   SetActorTickEnabled(false);
+
+  //CapsuleComponentCollision->SetSimulatePhysics(false);
+  
   if (IsValid(GetMesh()))
   {
     GetMesh()->ResetAnimInstanceDynamics(ETeleportType::TeleportPhysics);

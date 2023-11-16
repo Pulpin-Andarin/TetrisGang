@@ -68,4 +68,11 @@ public:
   UFUNCTION()
   virtual void ReturnToPool() override;
 
+  UFUNCTION(BlueprintCallable)
+  inline bool GetIsActive()
+  {
+    return bisActive;
+  }
+
+
 };

@@ -28,4 +28,6 @@ public:
   virtual void Deactivate() = 0;
 
   virtual void ReturnToPool() = 0;
+
+  bool bisActive = false;
 };

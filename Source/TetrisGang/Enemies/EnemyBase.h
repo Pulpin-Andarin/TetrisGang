@@ -39,11 +39,12 @@ public:
   // Inherited via IIPoolable
   virtual inline void Reactivate() override {
     SetRandomPieceInChest();
+    bisActive = true;
   };
 
   virtual inline void Deactivate() override
   {
-    // Do nothing yet
+    bisActive = false;
   };
 
   virtual inline void EnemyDeath() = 0;
